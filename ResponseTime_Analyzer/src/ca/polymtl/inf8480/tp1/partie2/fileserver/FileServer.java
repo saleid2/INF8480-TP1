@@ -40,7 +40,7 @@ public class FileServer implements Remote {
 		}
 	}
 
-	private boolean authenticate(String user, String password) {
+	private boolean authenticate(String user, String password) throws RemoteException {
 		// TODO: Create reference to AuthServer
 		// return authServerStub.verify(user,password);
 		return false;
