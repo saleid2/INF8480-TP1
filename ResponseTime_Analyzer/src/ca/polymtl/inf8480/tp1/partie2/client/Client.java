@@ -2,6 +2,8 @@ package ca.polymtl.inf8480.tp1.partie2.client;
 
 import ca.polymtl.inf8480.tp1.partie2.authserver.AuthServer;
 import ca.polymtl.inf8480.tp1.partie2.fileserver.FileServer;
+import ca.polymtl.inf8480.tp1.partie2.iauthserver.IAuthServer;
+import ca.polymtl.inf8480.tp1.partie2.ifileserver.IFileServer;
 
 import java.rmi.AccessException;
 import java.rmi.NotBoundException;
@@ -21,8 +23,8 @@ public class Client {
 		Client client = new Client(distantHostname);
 	}
 
-	private AuthServer authServerStub;
-	private FileServer fileServerStub;
+	private IAuthServer authServerStub;
+	private IFileServer fileServerStub;
 
 	public Client(String distantServerHostname) {
 		super();
@@ -36,12 +38,12 @@ public class Client {
 		authServerStub = authServerStub(distantServerHostname);
 	}
 
-	private AuthServer authServerStub(String hostname) {
-		AuthServer stub = null;
+	private IAuthServer authServerStub(String hostname) {
+		IAuthServer stub = null;
 
 		try {
 			Registry registry = LocateRegistry.getRegistry(hostname);
-			stub = (AuthServer) registry.lookup("server");
+			stub = (IAuthServer) registry.lookup("server");
 		} catch (NotBoundException e) {
 			System.out.println("Erreur: Le nom '" + e.getMessage()
 					+ "' n'est pas défini dans le registre.");
@@ -54,12 +56,12 @@ public class Client {
 		return stub;
 	}
 
-	private FileServer fileServerStub(String hostname) {
-		FileServer stub = null;
+	private IFileServer fileServerStub(String hostname) {
+		IFileServer stub = null;
 
 		try {
 			Registry registry = LocateRegistry.getRegistry(hostname);
-			stub = (FileServer) registry.lookup("server");
+			stub = (IFileServer) registry.lookup("server");
 		} catch (NotBoundException e) {
 			System.out.println("Erreur: Le nom '" + e.getMessage()
 					+ "' n'est pas défini dans le registre.");

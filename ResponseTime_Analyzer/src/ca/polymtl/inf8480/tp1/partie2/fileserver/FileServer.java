@@ -1,13 +1,17 @@
 package ca.polymtl.inf8480.tp1.partie2.fileserver;
 
+import ca.polymtl.inf8480.tp1.partie2.iauthserver.IAuthServer;
+import ca.polymtl.inf8480.tp1.partie2.ifileserver.IFileServer;
+
+import java.rmi.AccessException;
 import java.rmi.ConnectException;
-import java.rmi.Remote;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
-public class FileServer implements Remote {
+public class FileServer implements IFileServer {
 
 	public static void main(String[] args) {
 		// TODO: Test that this works
@@ -22,6 +26,8 @@ public class FileServer implements Remote {
 		server.run();
 	}
 
+	private IAuthServer authServerStub;
+
 	public FileServer(String hostname) {
 		super();
 
@@ -29,7 +35,7 @@ public class FileServer implements Remote {
 			System.setSecurityManager(new SecurityManager());
 		}
 
-		// Create AuthServerStub
+		authServerStub = authServerStub(hostname);
 	}
 
 	private void run() {
@@ -54,9 +60,25 @@ public class FileServer implements Remote {
 		}
 	}
 
+	private IAuthServer authServerStub(String hostname) {
+		IAuthServer stub = null;
+
+		try {
+			Registry registry = LocateRegistry.getRegistry(hostname);
+			stub = (IAuthServer) registry.lookup("server");
+		} catch (NotBoundException e) {
+			System.out.println("Erreur: Le nom '" + e.getMessage()
+					+ "' n'est pas défini dans le registre.");
+		} catch (AccessException e) {
+			System.out.println("Erreur: " + e.getMessage());
+		} catch (RemoteException e) {
+			System.out.println("Erreur: " + e.getMessage());
+		}
+
+		return stub;
+	}
+
 	private boolean authenticate(String user, String password) throws RemoteException {
-		// TODO: Create reference to AuthServer
 		return authServerStub.verify(user,password);
-		return false;
 	}
 }

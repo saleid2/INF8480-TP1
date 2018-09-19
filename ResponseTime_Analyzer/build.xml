@@ -17,6 +17,10 @@
 		<delete file="server.jar" />
 		<delete file="client.jar" />
 		<delete file="shared.jar" />
+		<delete file="authserver.jar" />
+		<delete file="iauthserver.jar" />
+		<delete file="fileserver.jar" />
+		<delete file="ifileserver.jar" />
 	</target>
 	<target depends="init" name="build-class">
 		<javac debug="true" debuglevel="${debuglevel}" destdir="bin" includeantruntime="false">
@@ -33,7 +37,9 @@
 
 	<!-- Partie 2 -->
 	<target depends="build-class" name="build-jar">
+		<jar destfile="iauthserver.jar" basedir="bin" includes="ca/polymtl/inf8480/tp1/partie2/iauthserver/**" update="false" />
 		<jar destfile="authserver.jar" basedir="bin" includes="ca/polymtl/inf8480/tp1/partie2/authserver/**" update="false" />
+		<jar destfile="ifileserver.jar" basedir="bin" includes="ca/polymtl/inf8480/tp1/partie2/ifileserver/**" update="false" />
 		<jar destfile="fileserver.jar" basedir="bin" includes="ca/polymtl/inf8480/tp1/partie2/fileserver/**" update="false" />
 		<jar destfile="client.jar" basedir="bin" includes="ca/polymtl/inf8480/tp1/partie2/client/**" update="false" />
 	</target>
