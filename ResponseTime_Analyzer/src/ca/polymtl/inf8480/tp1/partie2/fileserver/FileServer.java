@@ -11,7 +11,9 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class FileServer implements IFileServer {
 
@@ -82,6 +84,33 @@ public class FileServer implements IFileServer {
 		if (!authenticate(username, password)) return null;
 
 		return lockFile(filename, username);
+	}
+
+
+	/**
+	 * Outputs a list of files and the lock owner associated to each file, if exists
+	 * @param username Username
+	 * @param password Password
+	 * @return List of files and their associated locks, if any
+	 * @throws RemoteException
+	 */
+	@Override
+	public List<String> list(String username, String password) throws RemoteException {
+		File folder = new File(FILES_ROOT);
+		File[] fileList = folder.listFiles();
+
+		List<String> outFileList = new ArrayList<>();
+
+		for(File file : fileList) {
+			if(file.isFile()) {
+				String fileName = file.getName();
+				String lockOwner = lockedFiles.getOrDefault(fileName, null);
+
+				outFileList.add(fileName + (lockOwner != null ? " locked by " + lockOwner : " not locked"));
+			}
+		}
+
+		return outFileList;
 	}
 
 	private void run() {

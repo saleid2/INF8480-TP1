@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="2e2831d4-127d-44ea-ac2d-fd0738f44eff" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/src/ca/polymtl/inf8480/tp1/partie2/fileserver/FileServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ca/polymtl/inf8480/tp1/partie2/fileserver/FileServer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ca/polymtl/inf8480/tp1/partie2/ifileserver/IFileServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ca/polymtl/inf8480/tp1/partie2/ifileserver/IFileServer.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/bin/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -55,27 +56,27 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="java" value="4524" />
+          <entry key="java" value="5223" />
           <entry key="txt" value="8" />
           <entry key="xml" value="30" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="JAVA" value="4524" />
+          <entry key="JAVA" value="5223" />
           <entry key="PLAIN_TEXT" value="8" />
           <entry key="XML" value="30" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="java" value="16" />
+          <entry key="java" value="17" />
           <entry key="xml" value="2" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="JAVA" value="16" />
+          <entry key="JAVA" value="17" />
           <entry key="XML" value="2" />
         </counts>
       </usages-collector>
@@ -90,12 +91,26 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/ca/polymtl/inf8480/tp1/partie2/fileserver/FileServer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="205">
-              <caret line="136" column="48" selection-start-line="136" selection-start-column="48" selection-end-line="136" selection-end-column="48" />
+            <state relative-caret-position="306">
+              <caret line="93" column="63" selection-start-line="93" selection-start-column="63" selection-end-line="93" selection-end-column="63" />
               <folding>
+                <element signature="method#create#0;class#FileServer#0" />
+                <element signature="method#lock#0;class#FileServer#0" />
                 <element signature="method#authServerStub#0;class#FileServer#0" />
                 <element signature="method#updateLocks#0;class#FileServer#0" />
                 <element signature="method#getFileLocks#0;class#FileServer#0" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/ca/polymtl/inf8480/tp1/partie2/ifileserver/IFileServer.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="153">
+              <caret line="9" column="79" selection-start-line="9" selection-start-column="79" selection-end-line="9" selection-end-column="79" />
+              <folding>
+                <element signature="imports" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -142,7 +157,7 @@
   </component>
   <component name="ProjectFrameBounds">
     <option name="x" value="-7" />
-    <option name="width" value="1134" />
+    <option name="width" value="974" />
     <option name="height" value="1047" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -242,7 +257,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1537382322871" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1537383096739" />
     <property name="javascript.nodejs.core.library.configured.version" value="7.9.0" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="node.js.path.for.package.tslint" value="project" />
@@ -313,18 +328,18 @@
       <workItem from="1537229448158" duration="1070000" />
       <workItem from="1537287421824" duration="1092000" />
       <workItem from="1537374100492" duration="27000" />
-      <workItem from="1537379661556" duration="2649000" />
+      <workItem from="1537379661556" duration="3417000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="4838000" />
+    <option name="totallyTimeSpent" value="5606000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-7" y="0" width="1134" height="1047" extended-state="0" />
+    <frame x="-7" y="0" width="974" height="1047" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.23463687" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.27571115" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -422,8 +437,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/ca/polymtl/inf8480/tp1/partie2/ifileserver/IFileServer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
+        <state relative-caret-position="153">
+          <caret line="9" column="79" selection-start-line="9" selection-start-column="79" selection-end-line="9" selection-end-column="79" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -432,9 +447,11 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/ca/polymtl/inf8480/tp1/partie2/fileserver/FileServer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="205">
-          <caret line="136" column="48" selection-start-line="136" selection-start-column="48" selection-end-line="136" selection-end-column="48" />
+        <state relative-caret-position="306">
+          <caret line="93" column="63" selection-start-line="93" selection-start-column="63" selection-end-line="93" selection-end-column="63" />
           <folding>
+            <element signature="method#create#0;class#FileServer#0" />
+            <element signature="method#lock#0;class#FileServer#0" />
             <element signature="method#authServerStub#0;class#FileServer#0" />
             <element signature="method#updateLocks#0;class#FileServer#0" />
             <element signature="method#getFileLocks#0;class#FileServer#0" />
