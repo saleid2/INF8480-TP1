@@ -1,15 +1,16 @@
 package ca.polymtl.inf8480.tp1.partie2.authserver;
 
+import ca.polymtl.inf8480.tp1.partie2.iauthserver.IAuthServer;
+
 import java.io.*;
 import java.rmi.ConnectException;
-import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
 
-public class AuthServer implements Remote {
+public class AuthServer implements IAuthServer {
 
     private final static String USERS_FILE_PATH = "./users.dump";
 
@@ -49,6 +50,7 @@ public class AuthServer implements Remote {
         }
     }
 
+    @Override
     public boolean newUser(String user, String password) throws RemoteException {
         if (savedUsers == null) {
             savedUsers = readUsersFromDisk();
@@ -67,6 +69,7 @@ public class AuthServer implements Remote {
         return true;
     }
 
+    @Override
     public boolean verify(String user, String password) throws RemoteException {
         if (savedUsers != null) {
             String userPassword = savedUsers.get(user);

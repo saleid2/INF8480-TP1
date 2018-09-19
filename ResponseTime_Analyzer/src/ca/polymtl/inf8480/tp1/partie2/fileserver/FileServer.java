@@ -10,12 +10,26 @@ import java.rmi.server.UnicastRemoteObject;
 public class FileServer implements Remote {
 
 	public static void main(String[] args) {
-		FileServer server = new FileServer();
+		// TODO: Test that this works
+		String authServerHostname = null;
+
+		if(args.length > 0) {
+			authServerHostname = args[0];
+		}
+
+
+		FileServer server = new FileServer(authServerHostname);
 		server.run();
 	}
 
-	public FileServer() {
+	public FileServer(String hostname) {
 		super();
+
+		if (System.getSecurityManager() == null){
+			System.setSecurityManager(new SecurityManager());
+		}
+
+		// Create AuthServerStub
 	}
 
 	private void run() {
@@ -42,7 +56,7 @@ public class FileServer implements Remote {
 
 	private boolean authenticate(String user, String password) throws RemoteException {
 		// TODO: Create reference to AuthServer
-		// return authServerStub.verify(user,password);
+		return authServerStub.verify(user,password);
 		return false;
 	}
 }
