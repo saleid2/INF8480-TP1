@@ -46,6 +46,14 @@ public class FileServer implements IFileServer {
 	}
 
 
+	/**
+	 * Creates a file on the FileServer
+	 * @param username Username
+	 * @param password Password
+	 * @param filename Name of the file to create.
+	 * @return True if the file was created. False if the file already exists or user is unauthorised
+	 * @throws RemoteException
+	 */
 	@Override
 	public boolean create(String username, String password, String filename) throws RemoteException {
 		if (!authenticate(username, password)) return false;
@@ -57,6 +65,7 @@ public class FileServer implements IFileServer {
 			throw new RemoteException(e.getMessage());
 		}
 	}
+
 
 	/**
 	 * Allows the user to lock the file. If the current user owns the file, client should call get()
@@ -121,9 +130,12 @@ public class FileServer implements IFileServer {
 		return authServerStub.verify(user,password);
 	}
 
-
-
-
+	/**
+	 * Assigns a lock to the user passed as parameter
+	 * @param filename File to lock
+	 * @param user User to which the lock should be assigned
+	 * @return Username of the owner of the lock
+	 */
 	private String lockFile(String filename, String user) {
 		String lockOwner = lockedFiles.getOrDefault(filename, null);
 
