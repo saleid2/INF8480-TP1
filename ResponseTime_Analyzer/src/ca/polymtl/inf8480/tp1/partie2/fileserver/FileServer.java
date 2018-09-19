@@ -137,6 +137,20 @@ public class FileServer implements IFileServer {
 	}
 
 	/**
+	 * Should only be called after a push to release the lock.
+	 * @param filename File to unlock
+	 * @param user User who currently owns the lock
+	 */
+	private void unlockFile(String filename, String user) {
+		String lockOwner = lockedFiles.getOrDefault(filename, null);
+
+		if(lockOwner == null) return;
+
+		lockedFiles.remove(filename);
+		updateLocks(lockedFiles);
+	}
+
+	/**
 	 * Persists locks to disk
 	 * @param locked_files
 	 * @return
