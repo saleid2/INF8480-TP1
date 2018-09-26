@@ -15,4 +15,4 @@ HELP:
 
 EndOfMessage
 
-java -cp "$basepath"/client.jar:"$basepath"/shared.jar -Djava.security.policy="$basepath"/policy ca.polymtl.inf8480.tp1.partie2.client.Client $*
+java -cp "$basepath"/client.jar:"$basepath"/iauthserver.jar:"$basepath"/ifileserver.jar -Djava.security.policy="$basepath"/policy ca.polymtl.inf8480.tp1.partie2.client.Client $*

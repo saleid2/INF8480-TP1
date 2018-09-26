@@ -29,8 +29,12 @@ public class FileServer implements IFileServer {
 			authServerHostname = args[1];
 		}
 
-		FileServer server = new FileServer(authServerHostname);
-		server.run();
+		System.out.println("File server: " + args[0]);
+		System.out.println("Auth server: " + args[1]);
+
+
+		FileServer server = new FileServer();
+		server.run(authServerHostname);
 	}
 
 	private static final String FILES_ROOT = "./.file_store/";
@@ -40,14 +44,8 @@ public class FileServer implements IFileServer {
 
 	private IAuthServer authServerStub;
 
-	public FileServer(String hostname) {
+	public FileServer() {
 		super();
-
-		if (System.getSecurityManager() == null){
-			System.setSecurityManager(new SecurityManager());
-		}
-
-		authServerStub = authServerStub(hostname);
 	}
 
 
@@ -157,7 +155,7 @@ public class FileServer implements IFileServer {
 		for(File file : fileList) {
 			if(file.isFile()) {
 				String fileName = file.getName();
-				String lockOwner = lockedFiles.getOrDefault(fileName, null);
+				String lockOwner = lockedFiles.get(fileName);
 
 				outFileList.add(fileName + (lockOwner != null ? " locked by " + lockOwner : " not locked"));
 			}
@@ -196,7 +194,7 @@ public class FileServer implements IFileServer {
 		return files;
 	}
 
-	private void run() {
+	private void run(String hostname) {
 		if (System.getSecurityManager() == null) {
 			System.setSecurityManager(new SecurityManager());
 		}
@@ -208,6 +206,8 @@ public class FileServer implements IFileServer {
 			Registry registry = LocateRegistry.getRegistry();
 			registry.rebind("server", stub);
 			System.out.println("Server ready.");
+
+			authServerStub = authServerStub(hostname);
 
 			lockedFiles = getFileLocks();
 		} catch (ConnectException e) {
@@ -249,7 +249,7 @@ public class FileServer implements IFileServer {
 	 * @return Username of the owner of the lock
 	 */
 	private String lockFile(String filename, String user) {
-		String lockOwner = lockedFiles.getOrDefault(filename, null);
+		String lockOwner = lockedFiles.get(filename);
 
 		if(lockOwner == null) {
 			lockedFiles.put(filename, user);
@@ -266,7 +266,7 @@ public class FileServer implements IFileServer {
 	 * @param user User who currently owns the lock
 	 */
 	private void unlockFile(String filename, String user) {
-		String lockOwner = lockedFiles.getOrDefault(filename, null);
+		String lockOwner = lockedFiles.get(filename);
 
 		if(lockOwner == null) return;
 
@@ -311,7 +311,7 @@ public class FileServer implements IFileServer {
 	}
 
 	private boolean userLockedFile(String username, String filename) {
-		return username.equals(lockedFiles.getOrDefault(filename, null));
+		return username.equals(lockedFiles.get(filename));
 	}
 
 	/**

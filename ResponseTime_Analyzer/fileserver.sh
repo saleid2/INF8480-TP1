@@ -18,7 +18,7 @@ if [ -z "$1" ]
     IPADDR="127.0.0.1"
 fi
 
-java -cp "$basepath"/fileserver.jar:"$basepath"/ifileserver.jar \
+java -cp "$basepath"/fileserver.jar:"$basepath"/ifileserver.jar:"$basepath"/iauthserver.jar \
   -Djava.rmi.server.codebase=file:"$basepath"/ifileserver.jar \
   -Djava.security.policy="$basepath"/policy \
   -Djava.rmi.server.hostname="$IPADDR" \
