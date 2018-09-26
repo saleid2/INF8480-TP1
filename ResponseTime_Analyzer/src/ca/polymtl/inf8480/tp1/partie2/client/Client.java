@@ -1,7 +1,5 @@
 package ca.polymtl.inf8480.tp1.partie2.client;
 
-import ca.polymtl.inf8480.tp1.partie2.authserver.AuthServer;
-import ca.polymtl.inf8480.tp1.partie2.fileserver.FileServer;
 import ca.polymtl.inf8480.tp1.partie2.iauthserver.IAuthServer;
 import ca.polymtl.inf8480.tp1.partie2.ifileserver.IFileServer;
 
@@ -15,6 +13,8 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.security.MessageDigest;
+import java.util.HashMap;
+import java.util.List;
 
 
 public class Client {
@@ -42,25 +42,25 @@ public class Client {
 
 		switch(command) {
 			case "newuser":
-				createNewUser(username, password);
+				client.createNewUser(username, password);
 				break;
 			case "create":
-				createNewFile(username, password, file);
+				client.createNewFile(username, password, file);
 				break;
 			case "list":
-				listFiles(username, password);
+				client.listFiles(username, password);
 				break;
 			case "syncLocalDirectory":
-				syncLocalDirectory(username, password);
+				client.syncLocalDirectory(username, password);
 				break;
 			case "get":
-				getFile(username, password, file);
+				client.getFile(username, password, file);
 				break;
 			case "lock":
-				lockFile(username, password, file);
+				client.lockFile(username, password, file);
 				break;
 			case "push":
-				pushFile(username, password, file);
+				client.pushFile(username, password, file);
 				break;
 			default:
 
@@ -94,7 +94,7 @@ public class Client {
 	private void listFiles(String username, String password) {
 		try {
 			List<String> files = fileServerStub.list(username, password);
-			System.out.println("Files in directory :")
+			System.out.println("Files in directory :");
 			for (String file: files) {
 				System.out.println(file);
 			}
@@ -131,7 +131,7 @@ public class Client {
 			byte[] file = fileServerStub.get(username, password, filename, checksum);
 
 			if(file != null){
-				Files.write(Paths.get(FILES_ROOT + key), files.get(key));
+				Files.write(Paths.get(FILES_ROOT + filename), file);
 				System.out.println("File updated");
 			} else {
 				System.out.println("File is already up to date");
@@ -156,7 +156,7 @@ public class Client {
 				System.out.println("File " + filename + " is already locked by " + lockHolder);
 			}
 
-			get(username, password, filename);
+			getFile(username, password, filename);
 		} catch (RemoteException e) {
 			System.err.println("Erreur: " + e.getMessage());
 		}
