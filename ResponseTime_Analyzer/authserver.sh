@@ -7,8 +7,7 @@ popd > /dev/null
 cat << EndOfMessage
 HELP: 
 ./authserver.sh ip_address
-	- ip_address: (OPTIONAL) L'addresse ip du serveur.
-	  Si l'arguement est non fourni, on conisdère que le serveur est local (ip_address = 127.0.0.1)
+	- ip_address: L'addresse ip du serveur.
 
 EndOfMessage
 

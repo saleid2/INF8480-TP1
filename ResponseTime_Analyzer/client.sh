@@ -8,10 +8,10 @@ cat << EndOfMessage
 HELP: 
 ./client.sh remote_server_ip command username password filename
 	- remote_server_ip: l'addresse ip du serveur distant
-	- command: commande a executer
-	- username: username pour le authserver
-	- password: mot de passe pour le authserver
-	- filename: (OPTIONAL) nom du fichier a manipuler
+	- command: commande à exécuter
+	- username: nom d'utilisateur pour le serveur d'authentification
+	- password: mot de passe pour le serveur d'authentification
+	- filename: (OPTIONAL) nom du fichier à manipuler
 
 EndOfMessage
 

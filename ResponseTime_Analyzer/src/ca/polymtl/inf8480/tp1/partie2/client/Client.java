@@ -21,32 +21,29 @@ import java.util.List;
 public class Client {
 	public static void main(String[] args) {
 		String distantHostname = null;
+		distantHostname = args[0];		// addresse ip du serveur distant
+		String command = args[1];		// commande à exécuter
+		String username = args[2];		// nom d'utilisateur pour l'authentification
+		String password = args[3];		// mot de passe  pour l'authentification
 
 		if(args.length < 4) {
-			System.out.print("Missing params");
+			System.out.print("Paramètres manquants");
 			return;
 		}
 
-		distantHostname = args[0];
+		String filename = null;
+		if (args.length > 4) {
+			filename = args[4];			// nom du fichier à traiter
+		}
 
 		Client client = new Client(distantHostname);
-
-
-		String command = args[1];
-		String username = args[2];
-		String password = args[3];
-
-		String file = null;
-		if (args.length > 4) {
-			file = args[4];
-		}
 
 		switch(command) {
 			case "newuser":
 				client.createNewUser(username, password);
 				break;
 			case "create":
-				client.createNewFile(username, password, file);
+				client.createNewFile(username, password, filename);
 				break;
 			case "list":
 				client.listFiles(username, password);
@@ -55,17 +52,35 @@ public class Client {
 				client.syncLocalDirectory(username, password);
 				break;
 			case "get":
-				client.getFile(username, password, file);
+				client.getFile(username, password, filename);
 				break;
 			case "lock":
-				client.lockFile(username, password, file);
+				client.lockFile(username, password, filename);
 				break;
 			case "push":
-				client.pushFile(username, password, file);
+				client.pushFile(username, password, filename);
 				break;
 			default:
 
 		}
+	}
+
+	private IAuthServer authServerStub;
+	private IFileServer fileServerStub;
+	private static final String FILES_ROOT = "./files/";
+
+
+	public Client(String distantServerHostname) {
+		super();
+
+		if (System.getSecurityManager() == null) {
+			System.setSecurityManager(new SecurityManager());
+		}
+
+		// the file server is our machine on the localhost
+		fileServerStub = fileServerStub("127.0.0.1");
+
+		authServerStub = authServerStub(distantServerHostname);
 	}
 
 	private void createNewUser(String username, String password) {
@@ -87,13 +102,10 @@ public class Client {
 		try {
 			boolean success = fileServerStub.create(username, password, filename);
 			if (success) {
-				File file = new File(FILES_ROOT + filename);
-				file.createNewFile();
 				System.out.println(filename + " ajouté.");
 			} else {
 				System.out.println("Fichier déjà existant");
 			}
-			// TODO: Get file
 		}
 		catch (RemoteException e) {
 			System.err.println("Erreur: " + e.getMessage());
@@ -123,6 +135,7 @@ public class Client {
 
 			for(String key : files.keySet()){
 				try {
+					// Create and write files received in the directory
 					Files.write(Paths.get(FILES_ROOT + key), files.get(key));
 				} catch(IOException e) {
 					System.out.println("Erreur: " + e.getMessage());
@@ -190,23 +203,11 @@ public class Client {
 		}
 	}
 
-	private IAuthServer authServerStub;
-	private IFileServer fileServerStub;
-	private static final String FILES_ROOT = "./files/";
-
-
-	public Client(String distantServerHostname) {
-		super();
-
-		if (System.getSecurityManager() == null) {
-			System.setSecurityManager(new SecurityManager());
-		}
-
-		fileServerStub = fileServerStub("127.0.0.1");
-
-		authServerStub = authServerStub(distantServerHostname);
-	}
-
+	/**
+	 * Connect to an authentification server and return its stub
+	 * @param hostname IP address of the authentification server
+	 * @return Stub object of the server
+	 */
 	private IAuthServer authServerStub(String hostname) {
 		IAuthServer stub = null;
 
@@ -225,6 +226,11 @@ public class Client {
 		return stub;
 	}
 
+	/**
+	 * Connect to an file server and return its stub
+	 * @param hostname IP address of the file server
+	 * @return Stub object of the server
+	 */
 	private IFileServer fileServerStub(String hostname) {
 		IFileServer stub = null;
 
@@ -243,6 +249,11 @@ public class Client {
 		return stub;
 	}
 
+	/**
+	 * Calculate MD5 checksum for a file
+	 * @param filename Filename
+	 * @return MD5 checksum as String
+	 */
 	private String getFileMd5Checksum(String filename){
 		try {
 			byte[] fileBytes = Files.readAllBytes(Paths.get(FILES_ROOT + filename));

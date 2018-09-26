@@ -22,16 +22,7 @@ import java.util.List;
 public class FileServer implements IFileServer {
 
 	public static void main(String[] args) {
-		// TODO: Test that this works
-		String authServerHostname = null;
-
-		if(args.length > 0) {
-			authServerHostname = args[1];
-		}
-
-		System.out.println("File server: " + args[0]);
-		System.out.println("Auth server: " + args[1]);
-
+		String authServerHostname = args[0];
 
 		FileServer server = new FileServer();
 		server.run(authServerHostname);
@@ -99,15 +90,14 @@ public class FileServer implements IFileServer {
 	 */
 	@Override
 	public byte[] get(String username, String password, String filename, String checksum) throws RemoteException {
-		if (!authenticate(username, password)) throw new RemoteException("Unauthorized");
+		if (!authenticate(username, password)) throw new RemoteException("Autorisation refusée");
 
 		byte[] file = null;
 
-		System.out.println(checksum);
-		System.out.println(getFileMd5Checksum(filename));
-
+		// check if local file and the server file are the same version
 		if (checksum == null || !checksum.equals(getFileMd5Checksum(filename))) {
 			try {
+				// read the file data on the server
 				file = Files.readAllBytes(Paths.get(FILES_ROOT + filename));
 			} catch (Exception e) {
 				// ignore
@@ -130,11 +120,16 @@ public class FileServer implements IFileServer {
 	@Override
 	public boolean push(String username, String password, String filename, byte[] fileContent) throws RemoteException {
 		if (!authenticate(username, password)) return false;
+
+		// make sure that the file is locked before pushing new modifications
 		if (!userLockedFile(username, filename)) return false;
 
 		try {
 			Files.write(Paths.get(FILES_ROOT + filename), fileContent);
+
+			// unlock the file once the file has been updated on the server
 			unlockFile(filename, username);
+
 			return true;
 		} catch (IOException e) {
 			throw new RemoteException(e.getMessage());
@@ -241,8 +236,14 @@ public class FileServer implements IFileServer {
 		return stub;
 	}
 
+	/**
+	 * Verify that the specified username and password match to a existing credentials on the server
+	 * @param user username
+	 * @param password password
+	 * @return True if the specified credential exist on the server
+	 */
 	private boolean authenticate(String user, String password) throws RemoteException {
-		return authServerStub.verify(user,password);
+		return authServerStub.verify(user, password);
 	}
 
 	/**

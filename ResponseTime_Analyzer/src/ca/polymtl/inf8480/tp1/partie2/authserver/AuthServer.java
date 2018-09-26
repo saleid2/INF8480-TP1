@@ -41,24 +41,31 @@ public class AuthServer implements IAuthServer {
             savedUsers = readUsersFromDisk();
             System.out.println("Users loaded from disk");
         } catch (ConnectException e) {
-            System.err
-                    .println("Impossible de se connecter au registre RMI. Est-ce que rmiregistry est lancé ?");
-            System.err.println();
+            System.err.println("Impossible de se connecter au registre RMI. Est-ce que rmiregistry est lancé ?");
             System.err.println("Erreur: " + e.getMessage());
         } catch (Exception e) {
             System.err.println("Erreur: " + e.getMessage());
         }
     }
 
+    /**
+     * Create and add a new user entry to the saved list
+     * @param user username
+     * @param password password
+     * @return True if the new user was successfully added. False if the username is already taken
+     * @throws RemoteException
+     */
     @Override
     public boolean newUser(String user, String password) throws RemoteException {
         if (savedUsers == null) {
             savedUsers = readUsersFromDisk();
         }
 
+        // verify if the username already exist or not
         if (savedUsers.get(user) != null) {
-            throw new RemoteException("User " + user + " already exists");
+            throw new RemoteException("Le nom d'utilisateur " + user + " existe déjà.");
         } else {
+            // add the new user entry
             savedUsers.put(user, password);
             try {
                 writeUsersToDisk(savedUsers);
@@ -69,10 +76,19 @@ public class AuthServer implements IAuthServer {
         return true;
     }
 
+    /**
+     * Verify the credential
+     * @param user username
+     * @param password password
+     * @return True if the user credential is valid. (username exist and password matches)
+     * @throws RemoteException
+     */
     @Override
     public boolean verify(String user, String password) throws RemoteException {
         if (savedUsers != null) {
             String userPassword = savedUsers.get(user);
+
+            // verify if the user is registered
             if (userPassword != null) {
                 return userPassword.equals(password);
             }

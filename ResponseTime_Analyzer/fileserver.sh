@@ -7,8 +7,7 @@ popd > /dev/null
 cat << EndOfMessage
 HELP: 
 ./fileserver.sh ip_address
-	- ip_address: (OPTIONAL) L'addresse ip du serveur.
-	  Si l'arguement est non fourni, on conisdère que le serveur est local (ip_address = 127.0.0.1)
+	- ip_address: L'addresse ip du serveur distant.
 
 EndOfMessage
 
@@ -22,4 +21,4 @@ java -cp "$basepath"/fileserver.jar:"$basepath"/ifileserver.jar:"$basepath"/iaut
   -Djava.rmi.server.codebase=file:"$basepath"/ifileserver.jar \
   -Djava.security.policy="$basepath"/policy \
   -Djava.rmi.server.hostname="$IPADDR" \
-  ca.polymtl.inf8480.tp1.partie2.fileserver.FileServer $*
+  ca.polymtl.inf8480.tp1.partie2.fileserver.FileServer
