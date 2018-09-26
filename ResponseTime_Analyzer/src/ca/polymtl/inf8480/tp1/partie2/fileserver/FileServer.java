@@ -92,6 +92,32 @@ public class FileServer implements IFileServer {
 
 
 	/**
+	 * Fetches the most recent version of a file
+	 * @param username User's username
+	 * @param password User's password
+	 * @param filename Name of file to fetch
+	 * @param checksum File checksum to avoid downloading the current version of the file
+	 * @return File if checksum is different. Returns null if user is unauthorized or file is up to date
+	 * @throws RemoteException
+	 */
+	@Override
+	public byte[] get(String username, String password, String filename, String checksum) throws RemoteException {
+		if (authenticate(username, password)) return null;
+
+		byte[] file = null;
+
+		if (checksum == null || !checksum.equals(getFileMd5Checksum(filename))) {
+			try {
+				file = Files.readAllBytes(Paths.get(FILES_ROOT + filename));
+			} catch (Exception e) {
+				// ignore
+			}
+		}
+
+		return file;
+	}
+
+	/**
 	 * Outputs a list of files and the lock owner associated to each file, if exists
 	 * @param username Username
 	 * @param password Password
