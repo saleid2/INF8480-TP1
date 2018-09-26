@@ -21,11 +21,161 @@ public class Client {
 	public static void main(String[] args) {
 		String distantHostname = null;
 
-		if (args.length > 0) {
-			distantHostname = args[0];
+		if(args.length < 4) {
+			System.out.print("Missing params");
+			return;
 		}
 
+		distantHostname = args[0];
+
 		Client client = new Client(distantHostname);
+
+
+		String command = args[1];
+		String username = args[2];
+		String password = args[3];
+
+		String file = null;
+		if (args.length > 4) {
+			file = args[4];
+		}
+
+		switch(command) {
+			case "newuser":
+				createNewUser(username, password);
+				break;
+			case "create":
+				createNewFile(username, password, file);
+				break;
+			case "list":
+				listFiles(username, password);
+				break;
+			case "syncLocalDirectory":
+				syncLocalDirectory(username, password);
+				break;
+			case "get":
+				getFile(username, password, file);
+				break;
+			case "lock":
+				lockFile(username, password, file);
+				break;
+			case "push":
+				pushFile(username, password, file);
+				break;
+			default:
+
+		}
+	}
+
+	private void createNewUser(String username, String password) {
+		try {
+			authServerStub.newUser(username, password);
+		}
+		catch (RemoteException e) {
+			System.err.println("Erreur: " + e.getMessage());
+		}
+	}
+
+	private void createNewFile(String username, String password, String filename) {
+		try {
+			boolean success = fileServerStub.create(username, password, filename);
+			if (success) {
+				System.out.println("File successfully created");
+			} else {
+				System.out.println("File already exists");
+			}
+			// TODO: Get file
+		}
+		catch (RemoteException e) {
+			System.err.println("Erreur: " + e.getMessage());
+		}
+	}
+
+	private void listFiles(String username, String password) {
+		try {
+			List<String> files = fileServerStub.list(username, password);
+			System.out.println("Files in directory :")
+			for (String file: files) {
+				System.out.println(file);
+			}
+		}
+		catch (RemoteException e) {
+			System.err.println("Erreur: " + e.getMessage());
+		}
+	}
+
+	private void syncLocalDirectory(String username, String password) {
+		try {
+			HashMap<String, byte[]> files = fileServerStub.syncLocalDirectory(username, password);
+
+
+			for(String key : files.keySet()){
+				try {
+					Files.write(Paths.get(FILES_ROOT + key), files.get(key));
+				} catch(IOException e) {
+					System.out.println("Erreur: " + e.getMessage());
+				}
+			}
+			System.out.println("Directory sync complete");
+
+
+		} catch (RemoteException e) {
+			System.err.println("Erreur: " + e.getMessage());
+		}
+	}
+
+	private void getFile(String username, String password, String filename) {
+		try {
+			String checksum = getFileMd5Checksum(filename);
+
+			byte[] file = fileServerStub.get(username, password, filename, checksum);
+
+			if(file != null){
+				Files.write(Paths.get(FILES_ROOT + key), files.get(key));
+				System.out.println("File updated");
+			} else {
+				System.out.println("File is already up to date");
+			}
+
+		} catch (RemoteException e) {
+			System.err.println("Erreur: " + e.getMessage());
+		} catch (IOException e) {
+			System.err.println("Erreur: " + e.getMessage());
+		}
+	}
+
+	private void lockFile(String username, String password, String filename) {
+		try {
+			String checksum = getFileMd5Checksum(filename);
+
+			String lockHolder = fileServerStub.lock(username, password, filename, checksum);
+
+			if (lockHolder.equals(username)) {
+				System.out.println("File " + filename + " successfully locked");
+			} else {
+				System.out.println("File " + filename + " is already locked by " + lockHolder);
+			}
+
+			get(username, password, filename);
+		} catch (RemoteException e) {
+			System.err.println("Erreur: " + e.getMessage());
+		}
+	}
+
+	private void pushFile(String username, String password, String filename) {
+		try {
+			byte[] filecontent = Files.readAllBytes(Paths.get(FILES_ROOT + filename));
+			boolean success = fileServerStub.push(username, password, filename, filecontent);
+			if(success) {
+				System.out.println("File pushed successfully");
+			} else {
+				System.err.println("File access unauthorized");
+			}
+		} catch (RemoteException e) {
+			System.err.println("Erreur: " + e.getMessage());
+		} catch (IOException e) {
+			System.err.println("Erreur: " + e.getMessage());
+		}
 	}
 
 	private IAuthServer authServerStub;

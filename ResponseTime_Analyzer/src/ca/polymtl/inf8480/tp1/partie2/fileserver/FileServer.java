@@ -26,9 +26,8 @@ public class FileServer implements IFileServer {
 		String authServerHostname = null;
 
 		if(args.length > 0) {
-			authServerHostname = args[0];
+			authServerHostname = args[1];
 		}
-
 
 		FileServer server = new FileServer(authServerHostname);
 		server.run();
@@ -203,7 +202,7 @@ public class FileServer implements IFileServer {
 		}
 
 		try {
-			FileServer stub = (FileServer) UnicastRemoteObject
+			IFileServer stub = (IFileServer) UnicastRemoteObject
 					.exportObject(this, 0);
 
 			Registry registry = LocateRegistry.getRegistry();

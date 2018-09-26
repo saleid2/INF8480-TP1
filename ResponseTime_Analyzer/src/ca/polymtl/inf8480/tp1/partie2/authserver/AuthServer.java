@@ -31,7 +31,7 @@ public class AuthServer implements IAuthServer {
         }
 
         try {
-            AuthServer stub = (AuthServer) UnicastRemoteObject
+            IAuthServer stub = (IAuthServer) UnicastRemoteObject
                     .exportObject(this, 0);
 
             Registry registry = LocateRegistry.getRegistry();
