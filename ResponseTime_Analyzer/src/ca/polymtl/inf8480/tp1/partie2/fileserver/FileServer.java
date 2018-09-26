@@ -160,7 +160,7 @@ public class FileServer implements IFileServer {
 				String fileName = file.getName();
 				String lockOwner = lockedFiles.get(fileName);
 
-				outFileList.add(fileName + (lockOwner != null ? " locked by " + lockOwner : " not locked"));
+				outFileList.add("* " + fileName + "\t" + (lockOwner != null ? "verrouillé par " + lockOwner : "non verrouillé"));
 			}
 		}
 

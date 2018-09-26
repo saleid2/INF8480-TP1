@@ -70,7 +70,13 @@ public class Client {
 
 	private void createNewUser(String username, String password) {
 		try {
-			authServerStub.newUser(username, password);
+			boolean success = authServerStub.newUser(username, password);
+
+			if (success) {
+				System.out.println("Nouvelle utilisateur créée");
+			} else {
+				System.out.println("Utilisateur déjà existante");
+			}
 		}
 		catch (RemoteException e) {
 			System.err.println("Erreur: " + e.getMessage());
@@ -83,9 +89,9 @@ public class Client {
 			if (success) {
 				File file = new File(FILES_ROOT + filename);
 				file.createNewFile();
-				System.out.println("File successfully created");
+				System.out.println(filename + " ajouté.");
 			} else {
-				System.out.println("File already exists");
+				System.out.println("Fichier déjà existant");
 			}
 			// TODO: Get file
 		}
@@ -99,10 +105,10 @@ public class Client {
 	private void listFiles(String username, String password) {
 		try {
 			List<String> files = fileServerStub.list(username, password);
-			System.out.println("Files in directory :");
 			for (String file: files) {
 				System.out.println(file);
 			}
+			System.out.println(files.size() + " fichier(s)");
 		}
 		catch (RemoteException e) {
 			System.err.println("Erreur: " + e.getMessage());
@@ -113,7 +119,7 @@ public class Client {
 		try {
 			HashMap<String, byte[]> files = fileServerStub.syncLocalDirectory(username, password);
 
-			if(files == null) throw new RemoteException("Unauthorized");
+			if(files == null) throw new RemoteException("Autorisation refusée");
 
 			for(String key : files.keySet()){
 				try {
@@ -122,7 +128,7 @@ public class Client {
 					System.out.println("Erreur: " + e.getMessage());
 				}
 			}
-			System.out.println("Directory sync complete");
+			System.out.println("Synchronization terminée.");
 
 
 		} catch (RemoteException e) {
@@ -138,9 +144,9 @@ public class Client {
 
 			if(file != null){
 				Files.write(Paths.get(FILES_ROOT + filename), file);
-				System.out.println("File updated");
+				System.out.println(filename + " synchronisé.");
 			} else {
-				System.out.println("File is already up to date");
+				System.out.println(filename + " est déjà à jour.");
 			}
 
 		} catch (RemoteException e) {
@@ -157,9 +163,9 @@ public class Client {
 			String lockHolder = fileServerStub.lock(username, password, filename, checksum);
 
 			if (lockHolder.equals(username)) {
-				System.out.println("File " + filename + " successfully locked");
+				System.out.println(filename + "verrouillé.");
 			} else {
-				System.out.println("File " + filename + " is already locked by " + lockHolder);
+				System.out.println(filename + " est déjà verrouillé par " + lockHolder);
 			}
 
 			getFile(username, password, filename);
@@ -173,9 +179,9 @@ public class Client {
 			byte[] filecontent = Files.readAllBytes(Paths.get(FILES_ROOT + filename));
 			boolean success = fileServerStub.push(username, password, filename, filecontent);
 			if(success) {
-				System.out.println("File pushed successfully");
+				System.out.println(filename + " a été envoyé au serveur.");
 			} else {
-				System.err.println("File access unauthorized");
+				System.err.println("opération refusée : vous devez verrouiller d'abord le fichier.");
 			}
 		} catch (RemoteException e) {
 			System.err.println("Erreur: " + e.getMessage());
