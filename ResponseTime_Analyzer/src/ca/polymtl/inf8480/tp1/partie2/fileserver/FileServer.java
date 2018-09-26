@@ -22,7 +22,10 @@ import java.util.List;
 public class FileServer implements IFileServer {
 
 	public static void main(String[] args) {
-		String authServerHostname = args[0];
+		String authServerHostname = null];
+        if(args.length > 0) { 
+			authServerHostname = args[1];
+		}
 
 		FileServer server = new FileServer();
 		server.run(authServerHostname);

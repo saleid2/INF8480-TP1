@@ -6,8 +6,9 @@ popd > /dev/null
 
 cat << EndOfMessage
 HELP: 
-./fileserver.sh ip_address
-	- ip_address: L'addresse ip du serveur distant.
+./fileserver.sh ip_address ip_address_auth
+	- ip_address: L'addresse ip du serveur de fichier.
+	- ip_address_auth: L'addresse ip du serveur distant d'authentification.
 
 EndOfMessage
 
