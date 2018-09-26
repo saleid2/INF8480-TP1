@@ -99,9 +99,12 @@ public class FileServer implements IFileServer {
 	 */
 	@Override
 	public byte[] get(String username, String password, String filename, String checksum) throws RemoteException {
-		if (authenticate(username, password)) return null;
+		if (!authenticate(username, password)) throw new RemoteException("Unauthorized");
 
 		byte[] file = null;
+
+		System.out.println(checksum);
+		System.out.println(getFileMd5Checksum(filename));
 
 		if (checksum == null || !checksum.equals(getFileMd5Checksum(filename))) {
 			try {

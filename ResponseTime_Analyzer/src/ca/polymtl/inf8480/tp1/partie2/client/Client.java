@@ -4,6 +4,7 @@ import ca.polymtl.inf8480.tp1.partie2.iauthserver.IAuthServer;
 import ca.polymtl.inf8480.tp1.partie2.ifileserver.IFileServer;
 
 import javax.xml.bind.DatatypeConverter;
+import java.io.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -80,6 +81,8 @@ public class Client {
 		try {
 			boolean success = fileServerStub.create(username, password, filename);
 			if (success) {
+				File file = new File(FILES_ROOT + filename);
+				file.createNewFile();
 				System.out.println("File successfully created");
 			} else {
 				System.out.println("File already exists");
@@ -88,6 +91,8 @@ public class Client {
 		}
 		catch (RemoteException e) {
 			System.err.println("Erreur: " + e.getMessage());
+		} catch (Exception e) {
+			// ignore
 		}
 	}
 
@@ -108,6 +113,7 @@ public class Client {
 		try {
 			HashMap<String, byte[]> files = fileServerStub.syncLocalDirectory(username, password);
 
+			if(files == null) throw new RemoteException("Unauthorized");
 
 			for(String key : files.keySet()){
 				try {
