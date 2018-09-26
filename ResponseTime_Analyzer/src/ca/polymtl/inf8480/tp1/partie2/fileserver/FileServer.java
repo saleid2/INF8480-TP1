@@ -3,7 +3,10 @@ package ca.polymtl.inf8480.tp1.partie2.fileserver;
 import ca.polymtl.inf8480.tp1.partie2.iauthserver.IAuthServer;
 import ca.polymtl.inf8480.tp1.partie2.ifileserver.IFileServer;
 
+import javax.xml.bind.DatatypeConverter;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.rmi.AccessException;
 import java.rmi.ConnectException;
 import java.rmi.NotBoundException;
@@ -11,6 +14,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -224,6 +228,25 @@ public class FileServer implements IFileServer {
 			return locks;
 		} catch (Exception e) {
 			return new HashMap<String, String>();
+		}
+	}
+
+	/**
+	 * Calculate MD5 checksum for a file
+	 * @param filename Filename
+	 * @return MD5 checksum as String
+	 */
+	private String getFileMd5Checksum(String filename){
+		try {
+			byte[] fileBytes = Files.readAllBytes(Paths.get(FILES_ROOT + filename));
+			byte[] fileHash = MessageDigest.getInstance("MD5").digest(fileBytes);
+
+			return DatatypeConverter.printHexBinary(fileHash);
+		} catch (IOException e) {
+			// TODO: Handle file doesn't exist
+			return "";
+		} catch (Exception e) {
+			return "";
 		}
 	}
 }

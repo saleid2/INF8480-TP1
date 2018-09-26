@@ -5,11 +5,16 @@ import ca.polymtl.inf8480.tp1.partie2.fileserver.FileServer;
 import ca.polymtl.inf8480.tp1.partie2.iauthserver.IAuthServer;
 import ca.polymtl.inf8480.tp1.partie2.ifileserver.IFileServer;
 
+import javax.xml.bind.DatatypeConverter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.rmi.AccessException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.security.MessageDigest;
 
 
 public class Client {
@@ -25,6 +30,8 @@ public class Client {
 
 	private IAuthServer authServerStub;
 	private IFileServer fileServerStub;
+	private static final String FILES_ROOT = "./files/";
+
 
 	public Client(String distantServerHostname) {
 		super();
@@ -72,5 +79,19 @@ public class Client {
 		}
 
 		return stub;
+	}
+
+	private String getFileMd5Checksum(String filename){
+		try {
+			byte[] fileBytes = Files.readAllBytes(Paths.get(FILES_ROOT + filename));
+			byte[] fileHash = MessageDigest.getInstance("MD5").digest(fileBytes);
+
+			return DatatypeConverter.printHexBinary(fileHash);
+		} catch (IOException e) {
+			// TODO: Handle file doesn't exist
+			return "";
+		} catch (Exception e) {
+			return "";
+		}
 	}
 }
