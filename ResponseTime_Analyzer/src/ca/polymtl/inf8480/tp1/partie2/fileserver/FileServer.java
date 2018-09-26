@@ -118,6 +118,30 @@ public class FileServer implements IFileServer {
 	}
 
 	/**
+	 * Upload changes to a locked file. User must be authenticated and have previously locked the file to
+	 * be allowed to modify it. File is unlocked following an update.
+	 * @param username User's uesrname
+	 * @param password User's password
+	 * @param filename Name of file to be updated
+	 * @param fileContent Content of files to write to disk
+	 * @return False if unauthorized. True if file was updated.
+	 * @throws RemoteException
+	 */
+	@Override
+	public boolean push(String username, String password, String filename, byte[] fileContent) throws RemoteException {
+		if (!authenticate(username, password)) return false;
+		if (!userLockedFile(username, filename)) return false;
+
+		try {
+			Files.write(Paths.get(FILES_ROOT + filename), fileContent);
+			unlockFile(filename, username);
+			return true;
+		} catch (IOException e) {
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	/**
 	 * Outputs a list of files and the lock owner associated to each file, if exists
 	 * @param username Username
 	 * @param password Password
@@ -255,6 +279,10 @@ public class FileServer implements IFileServer {
 		} catch (Exception e) {
 			return new HashMap<String, String>();
 		}
+	}
+
+	private boolean userLockedFile(String username, String filename) {
+		return username.equals(lockedFiles.getOrDefault(filename, null));
 	}
 
 	/**

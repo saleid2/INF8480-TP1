@@ -10,4 +10,5 @@ public interface IFileServer extends Remote {
     // TODO: syncLocalDirectoy
     byte[] get(String username, String password, String filename, String checksum) throws RemoteException;
     String lock(String username, String password, String filename, String checksum) throws RemoteException;
+    boolean push(String username, String password, String filename, byte[] fileContent) throws RemoteException;
 }
