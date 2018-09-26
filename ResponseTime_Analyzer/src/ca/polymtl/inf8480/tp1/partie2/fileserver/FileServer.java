@@ -167,6 +167,36 @@ public class FileServer implements IFileServer {
 		return outFileList;
 	}
 
+	/**
+	 * Fetch all files from server
+	 * @param username User's username
+	 * @param password User's password
+	 * @return Hashmap containing <Filename, Content>
+	 * @throws RemoteException
+	 */
+	@Override
+	public HashMap<String, byte[]> syncLocalDirectory(String username, String password) throws RemoteException {
+		if (!authenticate(username, password)) return null;
+
+		File folder = new File(FILES_ROOT);
+		File[] fileList = folder.listFiles();
+
+		HashMap<String, byte[]> files = new HashMap<>();
+
+		for (File file: fileList) {
+			if (file.isFile()) {
+				String filename = file.getName();
+				try {
+					files.put(filename, Files.readAllBytes(Paths.get(FILES_ROOT + filename)));
+				} catch (Exception e) {
+					// ignore
+				}
+			}
+		}
+
+		return files;
+	}
+
 	private void run() {
 		if (System.getSecurityManager() == null) {
 			System.setSecurityManager(new SecurityManager());
