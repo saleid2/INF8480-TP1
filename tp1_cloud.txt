@@ -1,0 +1,171 @@
+﻿PART 1
+
+Q1.
+
+Taille du paquet: 10.0
+Temps écoulé appel normal: 2024 ns
+Temps écoulé appel RMI local: 813768 ns
+Temps écoulé appel RMI local: 3649757 ns
+Taille du paquet: 100.0
+Temps écoulé appel normal: 589 ns
+Temps écoulé appel RMI local: 475542 ns
+Temps écoulé appel RMI local: 1210771 ns
+Taille du paquet: 1000.0
+Temps écoulé appel normal: 659 ns
+Temps écoulé appel RMI local: 376042 ns
+Temps écoulé appel RMI local: 1207613 ns
+Taille du paquet: 10000.0
+Temps écoulé appel normal: 3016 ns
+Temps écoulé appel RMI local: 453438 ns
+Temps écoulé appel RMI local: 2008698 ns
+Taille du paquet: 100000.0
+Temps écoulé appel normal: 5503 ns
+Temps écoulé appel RMI local: 444495 ns
+Temps écoulé appel RMI local: 9781498 ns
+Taille du paquet: 1000000.0
+Temps écoulé appel normal: 111230 ns
+Temps écoulé appel RMI local: 1445710 ns
+Temps écoulé appel RMI local: 93915927 ns
+Taille du paquet: 1.0E7
+Temps écoulé appel normal: 11391392 ns
+Temps écoulé appel RMI local: 46789697 ns
+Temps écoulé appel RMI local: 883829436 ns
+
+
+Taille du paquet: 10.0
+Temps écoulé appel normal: 1922 ns
+Temps écoulé appel RMI local: 910742 ns
+Temps écoulé appel RMI local: 3324031 ns
+Taille du paquet: 100.0
+Temps écoulé appel normal: 703 ns
+Temps écoulé appel RMI local: 373234 ns
+Temps écoulé appel RMI local: 930086 ns
+Taille du paquet: 1000.0
+Temps écoulé appel normal: 667 ns
+Temps écoulé appel RMI local: 263677 ns
+Temps écoulé appel RMI local: 1117466 ns
+Taille du paquet: 10000.0
+Temps écoulé appel normal: 3078 ns
+Temps écoulé appel RMI local: 440609 ns
+Temps écoulé appel RMI local: 1984015 ns
+Taille du paquet: 100000.0
+Temps écoulé appel normal: 5779 ns
+Temps écoulé appel RMI local: 563155 ns
+Temps écoulé appel RMI local: 9549041 ns
+Taille du paquet: 1000000.0
+Temps écoulé appel normal: 107444 ns
+Temps écoulé appel RMI local: 1843137 ns
+Temps écoulé appel RMI local: 89821653 ns
+Taille du paquet: 1.0E7
+Temps écoulé appel normal: 11504632 ns
+Temps écoulé appel RMI local: 38815266 ns
+Temps écoulé appel RMI local: 876932358 ns
+
+Taille du paquet: 10.0
+Temps écoulé appel normal: 1905 ns
+Temps écoulé appel RMI local: 927223 ns
+Temps écoulé appel RMI local: 1673778 ns
+Taille du paquet: 100.0
+Temps écoulé appel normal: 502 ns
+Temps écoulé appel RMI local: 459545 ns
+Temps écoulé appel RMI local: 1015295 ns
+Taille du paquet: 1000.0
+Temps écoulé appel normal: 508 ns
+Temps écoulé appel RMI local: 413204 ns
+Temps écoulé appel RMI local: 1139116 ns
+Taille du paquet: 10000.0
+Temps écoulé appel normal: 3051 ns
+Temps écoulé appel RMI local: 570641 ns
+Temps écoulé appel RMI local: 2058272 ns
+Taille du paquet: 100000.0
+Temps écoulé appel normal: 6883 ns
+Temps écoulé appel RMI local: 618772 ns
+Temps écoulé appel RMI local: 9661296 ns
+Taille du paquet: 1000000.0
+Temps écoulé appel normal: 112893 ns
+Temps écoulé appel RMI local: 1590440 ns
+Temps écoulé appel RMI local: 87163711 ns
+Taille du paquet: 1.0E7
+Temps écoulé appel normal: 11373650 ns
+Temps écoulé appel RMI local: 29861568 ns
+Temps écoulé appel RMI local: 868863117 ns
+
+
+Taille du paquet: 10.0
+Temps écoulé appel normal: 1887 ns
+Temps écoulé appel RMI local: 923886 ns
+Temps écoulé appel RMI local: 1629330 ns
+Taille du paquet: 100.0
+Temps écoulé appel normal: 515 ns
+Temps écoulé appel RMI local: 759714 ns
+Temps écoulé appel RMI local: 1561562 ns
+Taille du paquet: 1000.0
+Temps écoulé appel normal: 514 ns
+Temps écoulé appel RMI local: 541962 ns
+Temps écoulé appel RMI local: 1126468 ns
+Taille du paquet: 10000.0
+Temps écoulé appel normal: 2818 ns
+Temps écoulé appel RMI local: 566257 ns
+Temps écoulé appel RMI local: 1865099 ns
+Taille du paquet: 100000.0
+Temps écoulé appel normal: 6963 ns
+Temps écoulé appel RMI local: 680324 ns
+Temps écoulé appel RMI local: 9630642 ns
+Taille du paquet: 1000000.0
+Temps écoulé appel normal: 107900 ns
+Temps écoulé appel RMI local: 1429669 ns
+Temps écoulé appel RMI local: 87165387 ns
+Taille du paquet: 1.0E7
+Temps écoulé appel normal: 11425488 ns
+Temps écoulé appel RMI local: 42653561 ns
+Temps écoulé appel RMI local: 887238777 ns
+
+
+Taille du paquet: 10.0
+Temps écoulé appel normal: 1870 ns
+Temps écoulé appel RMI local: 851590 ns
+Temps écoulé appel RMI local: 1603202 ns
+Taille du paquet: 100.0
+Temps écoulé appel normal: 618 ns
+Temps écoulé appel RMI local: 429047 ns
+Temps écoulé appel RMI local: 987322 ns
+Taille du paquet: 1000.0
+Temps écoulé appel normal: 497 ns
+Temps écoulé appel RMI local: 508378 ns
+Temps écoulé appel RMI local: 1225607 ns
+Taille du paquet: 10000.0
+Temps écoulé appel normal: 3458 ns
+Temps écoulé appel RMI local: 509099 ns
+Temps écoulé appel RMI local: 2014585 ns
+Taille du paquet: 100000.0
+Temps écoulé appel normal: 5966 ns
+Temps écoulé appel RMI local: 576926 ns
+Temps écoulé appel RMI local: 9690578 ns
+Taille du paquet: 1000000.0
+Temps écoulé appel normal: 106752 ns
+Temps écoulé appel RMI local: 1529583 ns
+Temps écoulé appel RMI local: 86813117 ns
+Taille du paquet: 1.0E7
+Temps écoulé appel normal: 11493075 ns
+Temps écoulé appel RMI local: 37303911 ns
+Temps écoulé appel RMI local: 872159509 ns
+
+
+Q2.
+
+
+
+
+
+PART 2
+
+
+USING JDK8
+sudo add-apt-repository ppa:openjdk-r/ppa
+sudo apt-get update
+sudo apt-get install openjdk-8-jdk
+sudo update-alternatives --config java
+Select JDK8 (or newer) instead of jdk7
+
+
+

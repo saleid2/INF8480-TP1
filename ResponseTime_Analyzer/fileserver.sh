@@ -22,4 +22,4 @@ java -cp "$basepath"/fileserver.jar:"$basepath"/ifileserver.jar:"$basepath"/iaut
   -Djava.rmi.server.codebase=file:"$basepath"/ifileserver.jar \
   -Djava.security.policy="$basepath"/policy \
   -Djava.rmi.server.hostname="$IPADDR" \
-  ca.polymtl.inf8480.tp1.partie2.fileserver.FileServer
+  ca.polymtl.inf8480.tp1.partie2.fileserver.FileServer $*
