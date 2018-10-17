@@ -1,0 +1,20 @@
+- le client va recevoir en parametre le chemin vers le fichier de calcul
+- le client est lance sur la machine locale, et le repartiteur et les serveurs de calcul sont lances par SSH SUR LES AUTRES ORDINATEURS DE LA SALLE DE LABORATOIRE
+- le repartiteur doit s'enregistrer aupres de chaque serveur en leur envoyant son identifiant afin que les serveurs autorisent un certain repartiteur d'envoyer ses taches
+- les serveurs de calcul traitent les taches de facons sequentielles
+- le repartiteur doit envoyer les taches aux serveurs en parallele (quand on envoie une tache a un serveur, on attend pas la reponse avant d'envoyer la prochaine tache a un autre serveur)
+- le service de nom est utilise par le repartiteur et les serveurs afin de s'identifier. (Java RMI)
+- le repartiteur assigne des taches de calcul aux serveurs de calcul
+- le repartiteur recoit les resultats de calcul de tous les serveurs et en fait la somme
+- pour eviter un debordement dans les calculs, il faut appliquer un module de 4000
+- les deux types de calcul est les nombres de Pell et le plus grand facteur premier d'un nombre
+- le systeme peut travailler de 2 facons :
+    - mode securise: ne verifie pas les resultats recus des serveurs avant de les sommer
+    - mode non-securise: une meme tache de calcul est assigne a 2 serveurs et accepte le resultat si les 2 serveurs sont en accord avec le resultat
+- Chaque serveur accepte une tache si elle ne depasse pas un certain nombre d'operation maximal C qu'il est possible de MODIFIER. (la valeur C peut etre different pour chaque serveur)
+- le taux de refus est lineaire selon la fonction de (n-C)/(4*C) (taux negatif = 100%)
+- le repartiteur doit connaitre la capacite de ses serveurs de calcul, mais pas les taux de malice
+- un serveur recoit en parametre sa capacite et son taux de malice
+- GESTION DE PANNE
+    - serveur mort: redistribuer les taches aux autres serveurs
+    - pour simuler un resultat malicieux, on definit un parametre de taux de malice pour chaque serveur qui fait en sorte que le serveur retourne un resultat fautif (plus de 50% des serveurs doit etre non malicieux)
