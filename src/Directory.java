@@ -2,6 +2,10 @@ import Interface.IDirectory;
 
 import java.rmi.ConnectException;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.rmi.server.RemoteServer;
+import java.rmi.server.ServerNotActiveException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.HashSet;
 import java.util.Set;
@@ -19,8 +23,16 @@ public class Directory implements IDirectory {
     }
 
     @Override
-    public void addServer(String hostname) throws RemoteException {
-        servers.add(hostname);
+    public void addServer() throws RemoteException {
+        String serverHostname = null;
+        try {
+            serverHostname = RemoteServer.getClientHost();
+        } catch (ServerNotActiveException e) {
+            // Do nothing. The server that sent the request isn't active
+        }
+        if (serverHostname != null) {
+            servers.add(serverHostname);
+        }
     }
 
     @Override
@@ -40,6 +52,9 @@ public class Directory implements IDirectory {
 
         try {
             IDirectory stub = (IDirectory) UnicastRemoteObject.exportObject(this, 0);
+            Registry registry = LocateRegistry.getRegistry();
+            registry.rebind("serverdirectory", stub);
+            System.out.println("Directory ready.");
         } catch(ConnectException e){
             System.err.println("Could not connect to RMI registry. Is rmiregistry running?");
             System.err.println();
