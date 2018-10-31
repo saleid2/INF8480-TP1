@@ -2,26 +2,68 @@
  * Created by alhua on 18-10-17.
  */
 
+import Interface.IDirectory;
 import Interface.IServeur;
 
+import java.rmi.AccessException;
 import java.rmi.ConnectException;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.List;
+import java.util.Map;
 
 public class Serveur implements IServeur {
     public static void main(String[] args) {
-        Serveur server = new Serveur(0, 0);    //TEMPORARY DEFAULT VALUES
+
+        if (args.length < 3) {
+            System.out.println("Missing parameters");
+            return;
+        }
+
+        String serverDirectoryHostname = args[0];
+        int serverCapacity = Integer.parseInt(args[1]);
+        int serverMaliciousRate = Integer.parseInt(args[2]);
+
+
+        Serveur server = new Serveur(serverDirectoryHostname,serverCapacity, serverMaliciousRate);    //TEMPORARY DEFAULT VALUES
         server.run();
     }
 
     private int capacity;
     private float maliciousRate;
+    private IDirectory serverDirectoryStub;
 
-    public Serveur(int capacity, int maliciousRate) {
+    public Serveur(String hostname, int capacity, int maliciousRate) {
+        serverDirectoryStub = serverDirectoryStub(hostname);
+        try {
+            serverDirectoryStub.addServer();
+        } catch(RemoteException e) {
+            System.out.println("Erreur: " + e.getMessage());
+        }
+
         this.capacity = capacity;
         this.maliciousRate = maliciousRate/100f;
+    }
+
+    private IDirectory serverDirectoryStub(String hostname) {
+        IDirectory stub = null;
+
+        try {
+            Registry registry = LocateRegistry.getRegistry(hostname);
+            stub = (IDirectory) registry.lookup("serverdirectory");
+        } catch (NotBoundException e) {
+            System.out.println("Erreur: Le nom '" + e.getMessage() + "' n'est pas défini dans le registre");
+
+        } catch(AccessException e){
+            System.out.println("Erreur: " + e.getMessage());
+        } catch (RemoteException e){
+            System.out.println("Erreur: " + e.getMessage());
+        }
+
+        return stub;
     }
 
     private void run() {
@@ -52,7 +94,7 @@ public class Serveur implements IServeur {
      * @param operand the value passed to the operation
      * @return the result of the operation
      */
-    public int executeOperation(String operation, int operand) throws RemoteException {
+    private int executeOperation(String operation, int operand) throws Exception {
         int result = 0;
         switch(operation.toLowerCase()) {
             case "pell":
@@ -62,8 +104,24 @@ public class Serveur implements IServeur {
                 result = Operations.prime(operand);
                 break;
             default:
-                throw new RemoteException("Erreur: operation non reconnue");
+                throw new Exception("Erreur: operation non reconnue");
         }
+        return result;
+    }
+
+    @Override
+    public int doTask(List<Map.Entry<String, Integer>> tasks) throws RemoteException {
+        Integer result = 0;
+
+        try {
+            for (Map.Entry<String, Integer> entry : tasks) {
+                result += executeOperation(entry.getKey(), entry.getValue());
+                result %= 4000;
+            }
+        } catch(Exception e) {
+            throw new RemoteException(e.getMessage());
+        }
+
         return result;
     }
 
@@ -72,6 +130,7 @@ public class Serveur implements IServeur {
      * @param nTask number of operation of the task received
      * @return True if approved, False if rejected
      */
+    @Override
     public boolean isTaskApproved(int nTask) throws RemoteException {
         if (nTask <= capacity) {
             return true;
