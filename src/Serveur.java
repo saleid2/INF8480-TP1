@@ -4,23 +4,23 @@
 
 import Interface.IServeur;
 
-import java.rmi.AccessException;
 import java.rmi.ConnectException;
+import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
 public class Serveur implements IServeur {
     public static void main(String[] args) {
-        Serveur server = new Serveur(0);    //TEMPORARY DEFAULT VALUES
+        Serveur server = new Serveur(0, 0);    //TEMPORARY DEFAULT VALUES
         server.run();
     }
 
     private int capacity;
     private float maliciousRate;
 
-    public Serveur(int maliciousRate) {
-        this.capacity = 0;
+    public Serveur(int capacity, int maliciousRate) {
+        this.capacity = capacity;
         this.maliciousRate = maliciousRate/100f;
     }
 
@@ -47,27 +47,12 @@ public class Serveur implements IServeur {
     }
 
     /**
-     * Allocate resource to the server
-     * @param capacity maximum resource allocated to do task
-     */
-    public void allocateResource(int capacity) {
-        this.capacity = capacity;
-    }
-
-    public int doTask() {
-        // TODO add this function in the interface IServeur
-        // TODO call isTaskApproved() function to check first if the task should be rejected
-        // TODO do one operation at a time calling executeOperation() function
-        return 0;
-    }
-
-    /**
      * Execute the operation and return its result
      * @param operation the operation to do (pell or prime)
      * @param operand the value passed to the operation
      * @return the result of the operation
      */
-    private int executeOperation(String operation, int operand) {
+    public int executeOperation(String operation, int operand) throws RemoteException {
         int result = 0;
         switch(operation.toLowerCase()) {
             case "pell":
@@ -77,7 +62,7 @@ public class Serveur implements IServeur {
                 result = Operations.prime(operand);
                 break;
             default:
-                throw new IllegalArgumentException("Erreur: operation non reconnue");
+                throw new RemoteException("Erreur: operation non reconnue");
         }
         return result;
     }
@@ -87,7 +72,7 @@ public class Serveur implements IServeur {
      * @param nTask number of operation of the task received
      * @return True if approved, False if rejected
      */
-    private boolean isTaskApproved(int nTask) {
+    public boolean isTaskApproved(int nTask) throws RemoteException {
         if (nTask <= capacity) {
             return true;
         } else {
