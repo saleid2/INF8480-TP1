@@ -124,6 +124,10 @@ public class Serveur implements IServeur {
 
     @Override
     public int doTask(List<Map.Entry<String, Integer>> tasks) throws RemoteException {
+        if (!isTaskApproved(tasks.size())) {
+            return -1;
+        }
+
         Integer result = 0;
 
         try {
@@ -143,8 +147,7 @@ public class Serveur implements IServeur {
      * @param nTask number of operation of the task received
      * @return True if approved, False if rejected
      */
-    @Override
-    public boolean isTaskApproved(int nTask) throws RemoteException {
+    private boolean isTaskApproved(int nTask) {
         if (nTask <= capacity) {
             return true;
         } else {
