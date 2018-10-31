@@ -45,6 +45,11 @@ public class Serveur implements IServeur {
         }
 
         this.capacity = capacity;
+
+
+        // If server is launched with a malicious rate above 100, set it to 100.
+        if (maliciousRate > 100) maliciousRate = 100;
+
         this.maliciousRate = maliciousRate/100f;
     }
 
@@ -106,6 +111,14 @@ public class Serveur implements IServeur {
             default:
                 throw new Exception("Erreur: operation non reconnue");
         }
+
+
+        double p = Math.random();
+
+        if (p < maliciousRate) {
+            result = (int)(Math.random() * 1000) + 1;
+        }
+
         return result;
     }
 
