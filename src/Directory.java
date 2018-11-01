@@ -1,17 +1,29 @@
 import Interface.IDirectory;
+import Interface.IRepartiteur;
 
+import java.rmi.AccessException;
 import java.rmi.ConnectException;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.RemoteServer;
 import java.rmi.server.ServerNotActiveException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.AbstractMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 public class Directory implements IDirectory {
-    private Set<String> servers;
+    private int RMI_REGISTER_PORT = 5001;
+    private int port = 5002;
+
+    private Set<Map.Entry<String, Integer>> servers;
+    private String repartiteurHostName;
+    private String repartiteurUsername;
+    private String repartiteurPassword;
+    private IRepartiteur repartiteur;
 
     public static void main(String[] args) {
         Directory directoryServer = new Directory();
@@ -23,7 +35,23 @@ public class Directory implements IDirectory {
     }
 
     @Override
-    public void addServer() throws RemoteException {
+    public void addRepartiteur(String username, String password) throws RemoteException {
+        String repartiteurHostname = null;
+        try {
+            repartiteurUsername = username;
+            repartiteurPassword = password;
+            repartiteurHostname = RemoteServer.getClientHost();
+        } catch (ServerNotActiveException e) {
+            // Do nothing. The server that sent the request isn't active
+        }
+        if (repartiteurHostname != null) {
+            repartiteurHostName = repartiteurHostname;
+            repartiteur = repartiteurStub(repartiteurHostname);
+        }
+    }
+
+    @Override
+    public void addServer(int capacity) throws RemoteException {
         String serverHostname = null;
         try {
             serverHostname = RemoteServer.getClientHost();
@@ -31,12 +59,34 @@ public class Directory implements IDirectory {
             // Do nothing. The server that sent the request isn't active
         }
         if (serverHostname != null) {
-            servers.add(serverHostname);
+            servers.add(new AbstractMap.SimpleEntry(serverHostname, capacity));
         }
     }
 
     @Override
-    public Set<String> listServers(String username, String password) throws RemoteException {
+    public void removeServer() {
+        String serverHostname = null;
+        try {
+            serverHostname = RemoteServer.getClientHost();
+        } catch (ServerNotActiveException e) {
+            // Do nothing. The server that sent the request isn't active
+        }
+        if (serverHostname != null) {
+            servers.remove(serverHostname);
+            notifyChange();
+        }
+    }
+
+    @Override
+    public boolean verifyDistributor(String username, String password) {
+        if (username.equals(repartiteurUsername) && password.equals(repartiteurPassword)) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public Set<Map.Entry<String, Integer>> listServers(String username, String password) throws RemoteException {
         boolean isAuthorized = authenticateUser(username, password);
         if(isAuthorized) {
             return servers;
@@ -51,8 +101,8 @@ public class Directory implements IDirectory {
         }
 
         try {
-            IDirectory stub = (IDirectory) UnicastRemoteObject.exportObject(this, 0);
-            Registry registry = LocateRegistry.getRegistry();
+            IDirectory stub = (IDirectory) UnicastRemoteObject.exportObject(this, port);
+            Registry registry = LocateRegistry.getRegistry(RMI_REGISTER_PORT);
             registry.rebind("serverdirectory", stub);
             System.out.println("Directory ready.");
         } catch(ConnectException e){
@@ -64,6 +114,29 @@ public class Directory implements IDirectory {
         }
     }
 
+    /**
+     * Connect to a distributor and return its stub
+     * @param hostname IP address of the distributor
+     * @return Stub object of the distributor
+     */
+    private IRepartiteur repartiteurStub(String hostname) {
+        IRepartiteur stub = null;
+
+        try {
+            Registry registry = LocateRegistry.getRegistry(hostname, RMI_REGISTER_PORT);
+            stub = (IRepartiteur) registry.lookup("distributor");
+        } catch (NotBoundException e) {
+            System.out.println("Erreur: Le nom '" + e.getMessage()
+                    + "' n'est pas défini dans le registre.");
+        } catch (AccessException e) {
+            System.out.println("Erreur: " + e.getMessage());
+        } catch (RemoteException e) {
+            System.out.println("Erreur: " + e.getMessage());
+        }
+
+        return stub;
+    }
+
     private boolean authenticateUser(String username, String password){
         /*
          * In a real-world scenario, the user credentials would be validated against a database
@@ -71,5 +144,9 @@ public class Directory implements IDirectory {
          * This would, and should, never be used in a real world application.
          */
         return username.equals("inf8480-as") && password.equals("password12345");
+    }
+
+    private void notifyChange() {
+        repartiteur.updateServerList();
     }
 }

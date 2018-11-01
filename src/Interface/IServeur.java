@@ -10,6 +10,6 @@ import java.util.List;
 import java.util.Map;
 
 public interface IServeur extends Remote {
-    int doTask(List<Map.Entry<String, Integer>> tasks) throws RemoteException;
+    int doTask(List<Map.Entry<String, Integer>> tasks, String username, String password) throws RemoteException;
 }
 

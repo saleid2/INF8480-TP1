@@ -16,30 +16,44 @@ import java.util.List;
 import java.util.Map;
 
 public class Serveur implements IServeur {
-    public static void main(String[] args) {
-
-        if (args.length < 3) {
-            System.out.println("Missing parameters");
-            return;
-        }
-
-        String serverDirectoryHostname = args[0];
-        int serverCapacity = Integer.parseInt(args[1]);
-        int serverMaliciousRate = Integer.parseInt(args[2]);
-
-
-        Serveur server = new Serveur(serverDirectoryHostname,serverCapacity, serverMaliciousRate);    //TEMPORARY DEFAULT VALUES
-        server.run();
-    }
+    private int RMI_REGISTER_PORT = 5001;
+    private int port = 5002;
 
     private int capacity;
     private float maliciousRate;
     private IDirectory serverDirectoryStub;
 
+    public static void main(String[] args) {
+        if (args.length < 2) {
+            System.out.println("Missing parameters");
+            return;
+        }
+
+        String serverDirectoryHostname = args[0];
+        int serverMaliciousRate = Integer.parseInt(args[1]);
+        int serverCapacity;
+
+        if (args.length < 3) {
+            serverCapacity = 4;
+        } else {
+            serverCapacity = Integer.parseInt(args[2]);
+        }
+
+
+        Serveur server = new Serveur(serverDirectoryHostname, serverCapacity, serverMaliciousRate);
+        server.run();
+    }
+
     public Serveur(String hostname, int capacity, int maliciousRate) {
+        // Server crash handler, unregister its hostname from the directory server
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            System.out.println("Shutdown Hook is running !");
+            serverDirectoryStub.removeServer();
+        }));
+
         serverDirectoryStub = serverDirectoryStub(hostname);
         try {
-            serverDirectoryStub.addServer();
+            serverDirectoryStub.addServer(capacity);
         } catch(RemoteException e) {
             System.out.println("Erreur: " + e.getMessage());
         }
@@ -57,7 +71,7 @@ public class Serveur implements IServeur {
         IDirectory stub = null;
 
         try {
-            Registry registry = LocateRegistry.getRegistry(hostname);
+            Registry registry = LocateRegistry.getRegistry(hostname, RMI_REGISTER_PORT);
             stub = (IDirectory) registry.lookup("serverdirectory");
         } catch (NotBoundException e) {
             System.out.println("Erreur: Le nom '" + e.getMessage() + "' n'est pas défini dans le registre");
@@ -78,14 +92,13 @@ public class Serveur implements IServeur {
 
         try {
             IServeur stub = (IServeur) UnicastRemoteObject
-                    .exportObject(this, 0);
+                    .exportObject(this, port);
 
-            Registry registry = LocateRegistry.getRegistry();
+            Registry registry = LocateRegistry.getRegistry(RMI_REGISTER_PORT);
             registry.rebind("server", stub);
             System.out.println("Server ready.");
         } catch (ConnectException e) {
-            System.err
-                    .println("Impossible de se connecter au registre RMI. Est-ce que rmiregistry est lancé ?");
+            System.err.println("Impossible de se connecter au registre RMI. Est-ce que rmiregistry est lancé ?");
             System.err.println();
             System.err.println("Erreur: " + e.getMessage());
         } catch (Exception e) {
@@ -112,9 +125,9 @@ public class Serveur implements IServeur {
                 throw new Exception("Erreur: operation non reconnue");
         }
 
-
         double p = Math.random();
 
+        // probability of returning defected result
         if (p < maliciousRate) {
             result = (int)(Math.random() * 1000) + 1;
         }
@@ -123,12 +136,12 @@ public class Serveur implements IServeur {
     }
 
     @Override
-    public int doTask(List<Map.Entry<String, Integer>> tasks) throws RemoteException {
+    public int doTask(List<Map.Entry<String, Integer>> tasks, String username, String password) throws RemoteException {
         if (!isTaskApproved(tasks.size())) {
             return -1;
         }
 
-        Integer result = 0;
+        int result = 0;
 
         try {
             for (Map.Entry<String, Integer> entry : tasks) {
@@ -154,5 +167,15 @@ public class Serveur implements IServeur {
             float threshold = (nTask-capacity)/(4*capacity);
             return Math.random() > threshold;
         }
+    }
+
+    /**
+     * Call a remote function in the directory server to verify the authenticity of the distributor
+     * @param username username of the distributor
+     * @param password password of the distributor
+     * @return True if the credential exist, otherwise False
+     */
+    private boolean isAuthenticated(String username, String password) {
+        return serverDirectoryStub.verifyDistributor(username, password);
     }
 }

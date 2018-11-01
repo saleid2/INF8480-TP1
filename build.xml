@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project basedir="." default="build-jar" name="TP2">
+	<property name="debuglevel" value="source,lines,vars" />
+	<path id="TP2.classpath">
+		<pathelement location="bin" />
+	</path>
+	<target name="init">
+		<mkdir dir="bin" />
+		<copy includeemptydirs="false" todir="bin">
+			<fileset dir="src">
+				<exclude name="**/*.java" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="clean">
+		<delete dir="bin" />
+		<delete file="build/serveur.jar" />
+		<delete file="build/iserveur.jar" />
+		<delete file="build/repartiteur.jar" />
+		<delete file="build/irepartiteur.jar" />
+		<delete file="build/directory.jar" />
+		<delete file="build/idirectory.jar" />
+	</target>
+	<target depends="init" name="build-class">
+		<javac debug="true" debuglevel="${debuglevel}" destdir="bin" includeantruntime="false">
+			<src path="src" />
+			<classpath refid="TP2.classpath" />
+		</javac>
+	</target>
+
+	<target depends="build-class" name="build-jar">
+		<jar destfile="build/iserveur.jar" basedir="bin" includes="interface/**" update="false" />
+		<jar destfile="build/serveur.jar" basedir="bin" includes="**" update="false" />
+		<jar destfile="build/irepartiteur.jar" basedir="bin" includes="interface/**" update="false" />
+		<jar destfile="build/repartiteur.jar" basedir="bin" includes="**" update="false" />
+		<jar destfile="build/idirectory.jar" basedir="bin" includes="interface/**" update="false" />
+		<jar destfile="build/directory.jar" basedir="bin" includes="**" update="false" />
+	</target>
+</project>

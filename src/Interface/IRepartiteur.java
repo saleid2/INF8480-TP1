@@ -7,5 +7,9 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 public interface IRepartiteur extends Remote {
+    /**
+     * Ask directory server for an updated list of running servers
+     */
+    void updateServerList();
 }
 
