@@ -13,4 +13,4 @@ HELP:
 
 EndOfMessage
 
-java -cp "$basepath"/build/serveur.jar:"$basepath"/build/iserveur.jar: -Djava.security.policy="$basepath"/policy Serveur $*
+java -cp "$basepath"/build/serveur.jar:"$basepath"/build/iserveur.jar:"$basepath"/build/idirectory.jar: -Djava.security.policy="$basepath"/policy Serveur $*

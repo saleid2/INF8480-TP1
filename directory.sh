@@ -10,4 +10,4 @@ HELP:
 
 EndOfMessage
 
-java -cp "$basepath"/build/directory.jar:"$basepath"/build/idirectory.jar: -Djava.security.policy="$basepath"/policy Directory $*
+java -cp "$basepath"/build/directory.jar:"$basepath"/build/idirectory.jar:"$basepath"/build/irepartiteur.jar: -Djava.security.policy="$basepath"/policy Directory $*

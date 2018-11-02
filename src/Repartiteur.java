@@ -15,6 +15,7 @@ import java.rmi.ConnectException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.concurrent.*;
 
 public class Repartiteur implements IRepartiteur {
     private int RMI_REGISTER_PORT = 5001;
@@ -24,6 +25,7 @@ public class Repartiteur implements IRepartiteur {
     private Map.Entry<IServeur, Integer>[] serverStubs;
     private String username;
     private String password;
+    private int taskIndex = 0;
 
     public static void main(String[] args) {
         if (args.length < 2) {
@@ -202,58 +204,19 @@ public class Repartiteur implements IRepartiteur {
      * @param task the given task
      * @param taux the tolerated rate of rejection of a task
      * @param isSecuredMode the security mode of the distributor
-     * @return the result of the given task
+     * @return the result of the given taskMap.Entry<IServeur, Integer>
      */
     private int distributeTask(List<Map.Entry<String, Integer>> task, float taux, boolean isSecuredMode) {
-        int allResult = 0;
+        int result;
 
-        int i = 0;  // task index
-        int j = 0;  // server index
-        do {
-            // prepare subtask
-            List<Map.Entry<String, Integer>> subTask;
-            int operationPerTask = calculateOperationPerTask(serverStubs[j].getValue(), taux);
-            if (i+operationPerTask >= task.size()) {
-                subTask = task.subList(i, task.size());
-                i = task.size();
-            } else {
-                subTask = task.subList(i, i + operationPerTask);
-                i += operationPerTask;
-            }
+        if (isSecuredMode) {
+            result = securedMode(task, taux);
+        } else {
+            //result = unsecuredMode(task, taux);
+            result = 0;     //TEMP
+        }
 
-            try {
-                int result;
-                int index = j;
-                if (isSecuredMode) {
-                    // loop until result is found and try another server in case a server failed to accept the task
-                    do {
-                        result = sendOperationToServer(subTask, index);
-                        index++;
-                        index %= serverStubs.length;
-                    } while(result == -1);
-                } else {
-                    // Loop until a result is found, every time sending the same task to 2 servers and verify that both result match before accepting it
-                    int result1, result2;
-                    do {
-                        result1 = sendOperationToServer(subTask, index);
-                        result2 = sendOperationToServer(subTask, getRandomServerIndex(index));
-                        index++;
-                        index %= serverStubs.length;
-                    } while(result1 != result2 && (result1 == -1 || result2 == -1));
-
-                    result = result1;
-                }
-                allResult += result;
-
-                j++;
-                j %= serverStubs.length;
-            } catch (RemoteException e) {
-                System.out.println("Erreur: " + e.getMessage());
-            }
-            allResult %= 4000;
-        } while(i < task.size());
-
-        return allResult;
+        return result;
     }
 
     /**
@@ -280,13 +243,23 @@ public class Repartiteur implements IRepartiteur {
      * @throws RemoteException
      */
     private int sendOperationToServer(List<Map.Entry<String, Integer>> task, int serverIndex) throws RemoteException {
-        return serverStubs[serverIndex].getKey().doTask(task, username, password);
+        return sendOperationToServer(task, serverStubs[serverIndex].getKey());
     }
 
     /**
-     * THIS FUNCTION IS FOR TEST PURPOSE ONLY
-     * TODO REMOVE THIS FUNCTION AFTER DONE USING IT
-     * @param c capcity
+     * Call remote server function to perform a given task
+     * @param task the given task
+     * @param server the server to execute task
+     * @return the result of the task
+     * @throws RemoteException
+     */
+    private int sendOperationToServer(List<Map.Entry<String, Integer>> task, IServeur server) throws RemoteException {
+        return server.doTask(task, username, password);
+    }
+
+    /**
+     * Return the number of operation in a task based on the server capacity and server acceptance rate.
+     * @param c capacity
      * @param t acceptance rate
      * @return the number of operation per task
      */
@@ -294,4 +267,83 @@ public class Repartiteur implements IRepartiteur {
         int n = (int)Math.floor(t * (4*c) + c);
         return n;
     }
+
+    /**
+     * Run in secured mode
+     * @param task task to complete
+     * @param taux tolerated server rejection rate
+     * @return result of the task
+     */
+    private int securedMode(List<Map.Entry<String, Integer>> task, float taux) {
+        int finalResult = 0;
+        int j = 0;  // server index
+
+        ExecutorService executorService = Executors.newFixedThreadPool(serverStubs.length);
+        List<Future<Integer>> futures = new ArrayList<Future<Integer>>();
+
+        do {
+            try {
+                if (serverStubs[j].getKey().isServerFree()) {
+                    futures.add(executorService.submit(new Callable<Integer>() {
+                        @Override
+                        public Integer call() throws Exception {
+                            // prepare subtask
+                            List<Map.Entry<String, Integer>> subTask;
+                            int operationPerTask = calculateOperationPerTask(serverStubs[j].getValue(), taux);
+                            if (taskIndex + operationPerTask >= task.size()) {
+                                subTask = task.subList(taskIndex, task.size());
+                                taskIndex = task.size();
+                            } else {
+                                subTask = task.subList(taskIndex, taskIndex + operationPerTask);
+                                taskIndex += operationPerTask;
+                            }
+                            taskIndex += operationPerTask;
+
+                            // loop until result is found and try another server in case a server failed to accept the task
+                            int requestResult = 0;
+                            do {
+                                try {
+                                    requestResult = sendOperationToServer(task, serverStubs[j].getKey());
+                                } catch (RemoteException e) {
+                                    System.out.println("Erreur: " + e.getMessage());
+                                }
+                            } while (requestResult == -1);
+
+                            return requestResult;
+                        }
+                    }));
+                }
+            } catch (RemoteException e) {
+                System.out.println("Erreur: " + e.getMessage());
+            }
+        } while(taskIndex < task.size());
+
+        for (Future<Integer> future : futures) {
+            int result = 0;
+            try {
+                result = future.get();
+            } catch (ExecutionException | InterruptedException e) {
+                System.out.println("Erreur: " + e.getMessage());
+            }
+            finalResult += result;
+        }
+
+        return finalResult;
+    }
+
+    /*private int unsecuredMode(List<Map.Entry<String, Integer>> task, float taux) throws RemoteException {
+        // Loop until a result is found, every time sending the same task to 2 servers and verify that both result match before accepting it
+        int result;
+        int result1, result2;
+        do {
+            result1 = sendOperationToServer(subTask, index);
+            result2 = sendOperationToServer(subTask, getRandomServerIndex(index));
+            index++;
+            index %= serverStubs.length;
+        } while(result1 != result2 && (result1 == -1 || result2 == -1));
+
+        result = result1;
+
+        return result;
+    }*/
 }

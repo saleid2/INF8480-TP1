@@ -17,10 +17,11 @@ import java.util.Map;
 
 public class Serveur implements IServeur {
     private int RMI_REGISTER_PORT = 5001;
-    private int port = 5002;
+    private int port = 5003;
 
     private int capacity;
     private float maliciousRate;
+    private boolean isFree = true;
     private IDirectory serverDirectoryStub;
 
     public static void main(String[] args) {
@@ -48,7 +49,11 @@ public class Serveur implements IServeur {
         // Server crash handler, unregister its hostname from the directory server
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             System.out.println("Shutdown Hook is running !");
-            serverDirectoryStub.removeServer();
+            try {
+                serverDirectoryStub.removeServer();
+            } catch(RemoteException e) {
+                System.out.println("Erreur: " + e.getMessage());
+            }
         }));
 
         serverDirectoryStub = serverDirectoryStub(hostname);
@@ -137,7 +142,13 @@ public class Serveur implements IServeur {
 
     @Override
     public int doTask(List<Map.Entry<String, Integer>> tasks, String username, String password) throws RemoteException {
+        if (!isAuthenticated(username, password)) {
+            return -1;
+        }
+
+        isFree = false;
         if (!isTaskApproved(tasks.size())) {
+            isFree = true;
             return -1;
         }
 
@@ -152,7 +163,13 @@ public class Serveur implements IServeur {
             throw new RemoteException(e.getMessage());
         }
 
+        isFree = true;
         return result;
+    }
+
+    @Override
+    public boolean isServerFree() throws RemoteException {
+        return isFree;
     }
 
     /**
@@ -176,6 +193,11 @@ public class Serveur implements IServeur {
      * @return True if the credential exist, otherwise False
      */
     private boolean isAuthenticated(String username, String password) {
-        return serverDirectoryStub.verifyDistributor(username, password);
+        try {
+            return serverDirectoryStub.verifyDistributor(username, password);
+        } catch (RemoteException e) {
+            System.out.println("Erreur: " + e.getMessage());
+            return false;
+        }
     }
 }

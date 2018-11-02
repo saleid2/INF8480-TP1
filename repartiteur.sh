@@ -16,4 +16,4 @@ HELP:
 
 EndOfMessage
 
-java -cp "$basepath"/build/repartiteur.jar:"$basepath"/build/irepartiteur.jar: -Djava.security.policy="$basepath"/policy Repartiteur $*
+java -cp "$basepath"/build/repartiteur.jar:"$basepath"/build/irepartiteur.jar:"$basepath"/build/iserveur.jar:"$basepath"/build/idirectory.jar: -Djava.security.policy="$basepath"/policy Repartiteur $*

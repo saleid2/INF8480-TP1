@@ -17,7 +17,7 @@ import java.util.Set;
 
 public class Directory implements IDirectory {
     private int RMI_REGISTER_PORT = 5001;
-    private int port = 5002;
+    private int port = 5004;
 
     private Set<Map.Entry<String, Integer>> servers;
     private String repartiteurHostName;
@@ -64,7 +64,7 @@ public class Directory implements IDirectory {
     }
 
     @Override
-    public void removeServer() {
+    public void removeServer() throws RemoteException {
         String serverHostname = null;
         try {
             serverHostname = RemoteServer.getClientHost();

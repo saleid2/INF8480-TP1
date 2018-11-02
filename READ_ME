@@ -26,7 +26,7 @@ Nous avons 3 modules à exécuter dans un certain ordre:
         - isSecuredMode : mode de securité
 
 
-On doit d'abord modifier le port d'écoute de rmiregistry avec la commande :
+On doit d'abord modifier le port d'écoute de rmiregistry en exécutant la commande dans le dossier bin :
     /opt/java/jdk8.x86_64/bin/rmiregistry 5001
 
 il faut utiliser 5001, car nous avons hardcodé le port pour getRegistry()
