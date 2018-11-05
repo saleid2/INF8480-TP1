@@ -87,7 +87,7 @@ public class Directory implements IDirectory {
 
     @Override
     public Set<Map.Entry<String, Integer>> listServers(String username, String password) throws RemoteException {
-        boolean isAuthorized = authenticateUser(username, password);
+        boolean isAuthorized = verifyDistributor(username, password);
         if(isAuthorized) {
             return servers;
         } else {
@@ -137,16 +137,11 @@ public class Directory implements IDirectory {
         return stub;
     }
 
-    private boolean authenticateUser(String username, String password){
-        /*
-         * In a real-world scenario, the user credentials would be validated against a database
-         * For simplicity's sake, we will be validating against hard-coded credentials.
-         * This would, and should, never be used in a real world application.
-         */
-        return username.equals("inf8480-as") && password.equals("password12345");
-    }
-
     private void notifyChange() {
-        repartiteur.updateServerList();
+        try {
+            repartiteur.updateServerList();
+        } catch (RemoteException e) {
+            // ignore
+        }
     }
 }

@@ -10,6 +10,6 @@ public interface IRepartiteur extends Remote {
     /**
      * Ask directory server for an updated list of running servers
      */
-    void updateServerList();
+    void updateServerList() throws RemoteException;
 }
 

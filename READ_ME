@@ -23,6 +23,7 @@ Nous avons 3 modules à exécuter dans un certain ordre:
         - pass : mot de passe
         - pathToFile : chemin vers le fichier de calcul
         - directoryHostname : adresse ip du service de nom
+        - taux : taux de refus souhaite
         - isSecuredMode : mode de securité
 
 
@@ -30,3 +31,17 @@ On doit d'abord modifier le port d'écoute de rmiregistry en exécutant la comma
     /opt/java/jdk8.x86_64/bin/rmiregistry 5001
 
 il faut utiliser 5001, car nous avons hardcodé le port pour getRegistry()
+
+Executer le code sur une machine a distance
+
+1- Connecter sur une autre machine avec la commande:
+    ssh -x user@l4712-xx.info.polymtl.ca
+
+2- Rouler /opt/java/jdk8.x86_64/bin/rmiregistry 5001 dans le dossier bin
+
+3- Executer la commande rmiregistry& sur chaque machine distante dans le dossier bin
+
+4- Executer les scripts desires
+
+
+

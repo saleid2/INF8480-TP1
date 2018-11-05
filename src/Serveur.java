@@ -161,9 +161,10 @@ public class Serveur implements IServeur {
             }
         } catch(Exception e) {
             throw new RemoteException(e.getMessage());
+        } finally {
+            isFree = true;
         }
 
-        isFree = true;
         return result;
     }
 

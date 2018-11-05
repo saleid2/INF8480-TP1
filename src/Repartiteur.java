@@ -22,10 +22,9 @@ public class Repartiteur implements IRepartiteur {
     private int port = 5002;
 
     private IDirectory directoryStub;
-    private Map.Entry<IServeur, Integer>[] serverStubs;
+    private List<Map.Entry<IServeur, Integer>> serverStubs;
     private String username;
     private String password;
-    private int taskIndex = 0;
 
     public static void main(String[] args) {
         if (args.length < 2) {
@@ -40,12 +39,13 @@ public class Repartiteur implements IRepartiteur {
         boolean isSecuredMode;                                      // mode de securite
         float taux;                                                 // TODO test parameter only, REMOVE BEFORE REMISE
 
-        if (args.length < 5) {
+
+        if (args.length < 4) {
             taux = 0.1f;
             isSecuredMode = true;
         } else {
-            isSecuredMode = Boolean.parseBoolean(args[4]);
-            taux = Float.parseFloat(args[5]);
+            taux = Float.parseFloat(args[4]);
+            isSecuredMode = Boolean.parseBoolean(args[5]);
         }
 
         Repartiteur distributor = new Repartiteur(directoryHostname, username, password);
@@ -57,7 +57,7 @@ public class Repartiteur implements IRepartiteur {
         int finalResult = distributor.distributeTask(task, taux, isSecuredMode);
         long endTime = System.nanoTime();
 
-        long duration = (endTime - startTime);  //divide by 1000000 to get milliseconds.
+        long duration = (endTime - startTime) / 1000;  //divide by 1000000 to get milliseconds.
 
         System.out.println("Cette tache donne un resultat de " + finalResult);
         System.out.println("Le temps d'execution de cette tache est de " + duration + "ms");
@@ -81,7 +81,7 @@ public class Repartiteur implements IRepartiteur {
     }
 
     @Override
-    public void updateServerList() {
+    public void updateServerList() throws RemoteException {
         getServerList(username, password);
     }
 
@@ -96,9 +96,9 @@ public class Repartiteur implements IRepartiteur {
             List<Map.Entry<IServeur, Integer>> serverList = new ArrayList<>();
             for (Map.Entry<String, Integer> entry : serversHostname) {
                 IServeur server = serverStub(entry.getKey());
-                serverList.add(new AbstractMap.SimpleEntry(server, entry.getValue()));
+                serverList.add(new AbstractMap.SimpleEntry<IServeur, Integer>(server, entry.getValue() ));
             }
-            serverStubs = (Map.Entry<IServeur, Integer>[]) serverList.toArray();
+            serverStubs = serverList;
         } catch (RemoteException e) {
             System.out.println("Erreur: " + e.getMessage());
         }
@@ -138,7 +138,7 @@ public class Repartiteur implements IRepartiteur {
 
         try {
             Registry registry = LocateRegistry.getRegistry(hostname, RMI_REGISTER_PORT);
-            stub = (IDirectory) registry.lookup("directory");
+            stub = (IDirectory) registry.lookup("serverdirectory");
         } catch (NotBoundException e) {
             System.out.println("Erreur: Le nom '" + e.getMessage()
                     + "' n'est pas défini dans le registre.");
@@ -189,7 +189,7 @@ public class Repartiteur implements IRepartiteur {
             while (input.hasNext()) {
                 String operation  = input.next();
                 int argument  = Integer.parseInt(input.next());
-                Map.Entry<String, Integer> entry = new AbstractMap.SimpleEntry(operation, argument);
+                Map.Entry<String, Integer> entry = new AbstractMap.SimpleEntry<>(operation, argument);
                 operations.add(entry);
             }
         } catch (IOException e) {
@@ -212,8 +212,7 @@ public class Repartiteur implements IRepartiteur {
         if (isSecuredMode) {
             result = securedMode(task, taux);
         } else {
-            //result = unsecuredMode(task, taux);
-            result = 0;     //TEMP
+            result = unsecuredMode(task, taux);
         }
 
         return result;
@@ -229,7 +228,7 @@ public class Repartiteur implements IRepartiteur {
         int newServerIndex;
 
         do {
-            newServerIndex = rand.nextInt(serverStubs.length);
+            newServerIndex = rand.nextInt(serverStubs.size());
         } while(newServerIndex == exception);
 
         return newServerIndex;
@@ -243,7 +242,7 @@ public class Repartiteur implements IRepartiteur {
      * @throws RemoteException
      */
     private int sendOperationToServer(List<Map.Entry<String, Integer>> task, int serverIndex) throws RemoteException {
-        return sendOperationToServer(task, serverStubs[serverIndex].getKey());
+        return sendOperationToServer(task, serverStubs.get(serverIndex).getKey());
     }
 
     /**
@@ -277,46 +276,56 @@ public class Repartiteur implements IRepartiteur {
     private int securedMode(List<Map.Entry<String, Integer>> task, float taux) {
         int finalResult = 0;
         int j = 0;  // server index
+        int i = 0; // task index
 
-        ExecutorService executorService = Executors.newFixedThreadPool(serverStubs.length);
+        ExecutorService executorService = Executors.newFixedThreadPool(serverStubs.size());
         List<Future<Integer>> futures = new ArrayList<Future<Integer>>();
 
         do {
             try {
-                if (serverStubs[j].getKey().isServerFree()) {
+                if (serverStubs.get(j).getKey().isServerFree()) {
+                    // Necessary to use j in inner function
+                    final int server_index = j;
+
+
+                    // prepare subtask
+                    List<Map.Entry<String, Integer>> sublist;
+                    int operationPerTask = calculateOperationPerTask(serverStubs.get(server_index).getValue(), taux);
+                    if (i + operationPerTask >= task.size()) {
+                        sublist = task.subList(i, task.size());
+                        i = task.size();
+                    } else {
+                        sublist = task.subList(i, i + operationPerTask);
+                        i += operationPerTask;
+                    }
+
+                    List<Map.Entry<String, Integer>> subTask = new ArrayList<>();
+                    subTask.addAll(sublist);
+
                     futures.add(executorService.submit(new Callable<Integer>() {
                         @Override
                         public Integer call() throws Exception {
-                            // prepare subtask
-                            List<Map.Entry<String, Integer>> subTask;
-                            int operationPerTask = calculateOperationPerTask(serverStubs[j].getValue(), taux);
-                            if (taskIndex + operationPerTask >= task.size()) {
-                                subTask = task.subList(taskIndex, task.size());
-                                taskIndex = task.size();
-                            } else {
-                                subTask = task.subList(taskIndex, taskIndex + operationPerTask);
-                                taskIndex += operationPerTask;
-                            }
-                            taskIndex += operationPerTask;
 
                             // loop until result is found and try another server in case a server failed to accept the task
-                            int requestResult = 0;
+                            int requestResult;
                             do {
                                 try {
-                                    requestResult = sendOperationToServer(task, serverStubs[j].getKey());
+                                    requestResult = sendOperationToServer(subTask, serverStubs.get(server_index).getKey());
                                 } catch (RemoteException e) {
-                                    System.out.println("Erreur: " + e.getMessage());
+                                    requestResult = -1;
                                 }
                             } while (requestResult == -1);
 
                             return requestResult;
                         }
                     }));
+
+                    j = ( j + 1 )%serverStubs.size(); // Increment j in round-robin
                 }
             } catch (RemoteException e) {
                 System.out.println("Erreur: " + e.getMessage());
             }
-        } while(taskIndex < task.size());
+        } while(i < task.size());
 
         for (Future<Integer> future : futures) {
             int result = 0;
@@ -326,24 +335,92 @@ public class Repartiteur implements IRepartiteur {
                 System.out.println("Erreur: " + e.getMessage());
             }
             finalResult += result;
+            finalResult %= 4000;
         }
 
         return finalResult;
     }
 
-    /*private int unsecuredMode(List<Map.Entry<String, Integer>> task, float taux) throws RemoteException {
-        // Loop until a result is found, every time sending the same task to 2 servers and verify that both result match before accepting it
-        int result;
-        int result1, result2;
+    private int unsecuredMode(final List<Map.Entry<String, Integer>> task, float taux) {
+        int finalResult = 0;
+        int j = 0;  // server index
+        int i = 0; // task index
+
+        ExecutorService executorService = Executors.newCachedThreadPool();
+        List<Future<Integer>> futures = new ArrayList<Future<Integer>>();
+
         do {
-            result1 = sendOperationToServer(subTask, index);
-            result2 = sendOperationToServer(subTask, getRandomServerIndex(index));
-            index++;
-            index %= serverStubs.length;
-        } while(result1 != result2 && (result1 == -1 || result2 == -1));
+            try {
+                if (serverStubs.get(j).getKey().isServerFree()) {
+                    // Necessary to use j in inner function
+                    final int first_server_index = j;
 
-        result = result1;
+                    int k = j;
+                    while (!serverStubs.get(k).getKey().isServerFree() || j == k) {
+                        k = (k + 1) % serverStubs.size();
+                    }
 
-        return result;
-    }*/
+                    final int second_server_index = k;
+
+
+                    int lowest_capacity_server_index = serverStubs.get(j).getValue() < serverStubs.get(k).getValue() ? j : k;
+
+                    // prepare subtask
+                    List<Map.Entry<String, Integer>> sublist;
+                    int operationPerTask = calculateOperationPerTask(serverStubs.get(lowest_capacity_server_index).getValue(), taux);
+                    if (i + operationPerTask >= task.size()) {
+                        sublist = task.subList(i, task.size());
+                        i = task.size();
+                    } else {
+                        sublist = task.subList(i, i + operationPerTask);
+                        i += operationPerTask;
+                    }
+
+                    List<Map.Entry<String, Integer>> subTask = new ArrayList<>();
+                    subTask.addAll(sublist);
+
+                    futures.add(executorService.submit(new Callable<Integer>() {
+                        @Override
+                        public Integer call() throws Exception {
+
+                            // loop until result is found and try another server in case a server failed to accept the task
+                            int requestResult1;
+                            int requestResult2;
+
+                            do {
+                                try {
+                                    requestResult1 = sendOperationToServer(subTask, serverStubs.get(first_server_index).getKey());
+                                    requestResult2 = sendOperationToServer(subTask, serverStubs.get(second_server_index).getKey());
+                                } catch (RemoteException e) {
+                                    requestResult1 = -1;
+                                    requestResult2 = -1;
+                                }
+                            } while (requestResult1 == -1 || requestResult2 == -1 || requestResult1 != requestResult2);
+
+
+                            return requestResult1;
+                        }
+                    }));
+
+                    j = ( j + 1 )%serverStubs.size(); // Increment j in round-robin
+                }
+            } catch (RemoteException e) {
+                System.out.println("Erreur: " + e.getMessage());
+            }
+
+        } while(i < task.size());
+
+        for (Future<Integer> future : futures) {
+            int result = 0;
+            try {
+                result = future.get();
+            } catch (ExecutionException | InterruptedException e) {
+                System.out.println("Erreur: " + e.getMessage());
+            }
+            finalResult += result;
+            finalResult %= 4000;
+        }
+
+        return finalResult;
+    }
 }
