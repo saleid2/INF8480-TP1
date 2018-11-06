@@ -3,11 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="a5b4b090-60a1-41bc-89f4-949dc7d1dd90" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/READ_ME" afterPath="$PROJECT_DIR$/READ_ME" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Directory.java" afterPath="$PROJECT_DIR$/src/Directory.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Interface/IDirectory.java" afterPath="$PROJECT_DIR$/src/Interface/IDirectory.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Interface/IServeur.java" afterPath="$PROJECT_DIR$/src/Interface/IServeur.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Repartiteur.java" afterPath="$PROJECT_DIR$/src/Repartiteur.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Serveur.java" afterPath="$PROJECT_DIR$/src/Serveur.java" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -20,11 +18,11 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="Directory.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Directory.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Directory.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-945">
-              <caret line="47" column="54" lean-forward="false" selection-start-line="47" selection-start-column="54" selection-end-line="47" selection-end-column="54" />
+            <state relative-caret-position="445">
+              <caret line="132" column="37" lean-forward="true" selection-start-line="132" selection-start-column="37" selection-end-line="132" selection-end-column="37" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -32,16 +30,16 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Repartiteur.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Repartiteur.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Repartiteur.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-3596">
-              <caret line="83" column="32" lean-forward="false" selection-start-line="83" selection-start-column="16" selection-end-line="83" selection-end-column="32" />
+            <state relative-caret-position="-5214">
+              <caret line="59" column="0" lean-forward="true" selection-start-line="59" selection-start-column="0" selection-end-line="59" selection-end-column="0" />
               <folding>
                 <element signature="n#!!doc" expanded="true" />
                 <element signature="imports" expanded="true" />
-                <element signature="e#9165#9182#0" expanded="true" />
-                <element signature="e#12077#12094#0" expanded="true" />
+                <element signature="e#9099#9116#0" expanded="true" />
+                <element signature="e#12198#12215#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -50,8 +48,8 @@
       <file leaf-file-name="Serveur.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Serveur.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="872">
-              <caret line="206" column="77" lean-forward="false" selection-start-line="206" selection-start-column="77" selection-end-line="206" selection-end-column="77" />
+            <state relative-caret-position="-2462">
+              <caret line="19" column="28" lean-forward="false" selection-start-line="19" selection-start-column="28" selection-end-line="19" selection-end-column="28" />
               <folding>
                 <element signature="n#!!doc" expanded="true" />
                 <element signature="imports" expanded="true" />
@@ -72,11 +70,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>serverList</find>
-      <find>entry</find>
-      <find>calculateOperationPerTask</find>
-      <find>RMI_REGISTER_PORT</find>
-      <find>repartiteurStub</find>
       <find>securedMode</find>
       <find>isFree</find>
       <find>submit</find>
@@ -102,6 +95,11 @@
       <find>updateServerList</find>
       <find>addRepartiteur</find>
       <find>update</find>
+      <find>rebind</find>
+      <find>addServer</find>
+      <find>repartiteur</find>
+      <find>catch</find>
+      <find>lookup</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -122,15 +120,15 @@
         <option value="$PROJECT_DIR$/build.xml" />
         <option value="$PROJECT_DIR$/src/securedCallable.java" />
         <option value="$PROJECT_DIR$/src/Test.java" />
-        <option value="$PROJECT_DIR$/directory.sh" />
         <option value="$PROJECT_DIR$/repartiteur.sh" />
         <option value="$PROJECT_DIR$/serveur.sh" />
         <option value="/usr/lib/jvm/java-1.8.0/jre/lib/rt.jar!/java/util/concurrent/ExecutorService.class" />
-        <option value="$PROJECT_DIR$/src/Interface/IRepartiteur.java" />
         <option value="$PROJECT_DIR$/src/Interface/IServeur.java" />
         <option value="$PROJECT_DIR$/src/Interface/IDirectory.java" />
-        <option value="$PROJECT_DIR$/src/Repartiteur.java" />
         <option value="$PROJECT_DIR$/src/Serveur.java" />
+        <option value="$PROJECT_DIR$/directory.sh" />
+        <option value="$PROJECT_DIR$/src/Interface/IRepartiteur.java" />
+        <option value="$PROJECT_DIR$/src/Repartiteur.java" />
         <option value="$PROJECT_DIR$/src/Directory.java" />
       </list>
     </option>
@@ -155,6 +153,8 @@
     </navigator>
     <panes>
       <pane id="PackagesPane" />
+      <pane id="Scratches" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -217,10 +217,22 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="TP2" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="INF8480-TP2" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="build" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
-      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -482,7 +494,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="1920" height="1053" extended-state="0" />
+    <frame x="0" y="0" width="1920" height="1053" extended-state="1" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -499,7 +511,8 @@
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.13233724" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1339381" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32903227" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="true" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.08644611" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -511,7 +524,6 @@
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32903227" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="VcsContentAnnotationSettings">
@@ -544,8 +556,8 @@
           <folding>
             <element signature="n#!!doc" expanded="true" />
             <element signature="imports" expanded="true" />
-            <element signature="e#9165#9182#0" expanded="true" />
-            <element signature="e#12077#12094#0" expanded="true" />
+            <element signature="e#9099#9116#0" expanded="true" />
+            <element signature="e#12198#12215#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -587,8 +599,8 @@
           <folding>
             <element signature="n#!!doc" expanded="true" />
             <element signature="imports" expanded="true" />
-            <element signature="e#9165#9182#0" expanded="true" />
-            <element signature="e#12077#12094#0" expanded="true" />
+            <element signature="e#9099#9116#0" expanded="true" />
+            <element signature="e#12198#12215#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -630,8 +642,8 @@
           <folding>
             <element signature="n#!!doc" expanded="true" />
             <element signature="imports" expanded="true" />
-            <element signature="e#9165#9182#0" expanded="true" />
-            <element signature="e#12077#12094#0" expanded="true" />
+            <element signature="e#9099#9116#0" expanded="true" />
+            <element signature="e#12198#12215#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -665,8 +677,8 @@
           <folding>
             <element signature="n#!!doc" expanded="true" />
             <element signature="imports" expanded="true" />
-            <element signature="e#9165#9182#0" expanded="true" />
-            <element signature="e#12077#12094#0" expanded="true" />
+            <element signature="e#9099#9116#0" expanded="true" />
+            <element signature="e#12198#12215#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -698,8 +710,8 @@
           <folding>
             <element signature="n#!!doc" expanded="true" />
             <element signature="imports" expanded="true" />
-            <element signature="e#9165#9182#0" expanded="true" />
-            <element signature="e#12077#12094#0" expanded="true" />
+            <element signature="e#9099#9116#0" expanded="true" />
+            <element signature="e#12198#12215#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -754,8 +766,8 @@
           <folding>
             <element signature="n#!!doc" expanded="true" />
             <element signature="imports" expanded="true" />
-            <element signature="e#9165#9182#0" expanded="true" />
-            <element signature="e#12077#12094#0" expanded="true" />
+            <element signature="e#9099#9116#0" expanded="true" />
+            <element signature="e#12198#12215#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -776,8 +788,8 @@
           <folding>
             <element signature="n#!!doc" expanded="true" />
             <element signature="imports" expanded="true" />
-            <element signature="e#9165#9182#0" expanded="true" />
-            <element signature="e#12077#12094#0" expanded="true" />
+            <element signature="e#9099#9116#0" expanded="true" />
+            <element signature="e#12198#12215#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -836,28 +848,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/directory.sh">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="144">
-          <caret line="9" column="0" lean-forward="false" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/repartiteur.sh">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="304">
-          <caret line="19" column="0" lean-forward="false" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/serveur.sh">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="256">
-          <caret line="16" column="0" lean-forward="false" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar:///usr/lib/jvm/java-1.8.0/jre/lib/rt.jar!/java/util/concurrent/ThreadPoolExecutor.class">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="283">
@@ -901,9 +891,17 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/serveur.sh">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="64">
+          <caret line="4" column="16" lean-forward="false" selection-start-line="4" selection-start-column="16" selection-end-line="4" selection-end-column="16" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/Interface/IDirectory.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="608">
+        <state relative-caret-position="566">
           <caret line="41" column="39" lean-forward="false" selection-start-line="41" selection-start-column="39" selection-end-line="41" selection-end-column="39" />
           <folding />
         </state>
@@ -911,26 +909,32 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Interface/IRepartiteur.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="224">
-          <caret line="15" column="0" lean-forward="true" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
+        <state relative-caret-position="176">
+          <caret line="12" column="25" lean-forward="false" selection-start-line="12" selection-start-column="9" selection-end-line="12" selection-end-column="25" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Directory.java">
+    <entry file="file://$PROJECT_DIR$/repartiteur.sh">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-945">
-          <caret line="47" column="54" lean-forward="false" selection-start-line="47" selection-start-column="54" selection-end-line="47" selection-end-column="54" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
+        <state relative-caret-position="256">
+          <caret line="16" column="12" lean-forward="false" selection-start-line="16" selection-start-column="12" selection-end-line="16" selection-end-column="12" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/directory.sh">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="208">
+          <caret line="13" column="0" lean-forward="false" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Serveur.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="872">
-          <caret line="206" column="77" lean-forward="false" selection-start-line="206" selection-start-column="77" selection-end-line="206" selection-end-column="77" />
+        <state relative-caret-position="-2462">
+          <caret line="19" column="28" lean-forward="false" selection-start-line="19" selection-start-column="28" selection-end-line="19" selection-end-column="28" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
             <element signature="imports" expanded="true" />
@@ -941,13 +945,23 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Repartiteur.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-3596">
-          <caret line="83" column="32" lean-forward="false" selection-start-line="83" selection-start-column="16" selection-end-line="83" selection-end-column="32" />
+        <state relative-caret-position="-5214">
+          <caret line="59" column="0" lean-forward="true" selection-start-line="59" selection-start-column="0" selection-end-line="59" selection-end-column="0" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
             <element signature="imports" expanded="true" />
-            <element signature="e#9165#9182#0" expanded="true" />
-            <element signature="e#12077#12094#0" expanded="true" />
+            <element signature="e#9099#9116#0" expanded="true" />
+            <element signature="e#12198#12215#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Directory.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="445">
+          <caret line="132" column="37" lean-forward="true" selection-start-line="132" selection-start-column="37" selection-end-line="132" selection-end-column="37" />
+          <folding>
+            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>

@@ -72,7 +72,6 @@ public class Directory implements IDirectory {
             // Do nothing. The server that sent the request isn't active
         }
         if (serverHostname != null) {
-            System.out.println("remove server from directory");
             servers.remove(serverHostname);
             notifyChange();
         }
@@ -145,11 +144,9 @@ public class Directory implements IDirectory {
      */
     private void notifyChange() {
         try {
-            System.out.println("notify change");
-            System.out.println(repartiteur);
             repartiteur.updateServerList();
         } catch (RemoteException e) {
-            // ignore
+            System.err.println("Error: " + e.getMessage());
         }
     }
 }

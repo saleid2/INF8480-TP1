@@ -37,7 +37,7 @@ public class Repartiteur implements IRepartiteur {
         String pathToFile = args[2];		                        // chemin au fichier de calcul
         String directoryHostname = args[3];		                    // addresse ip du serveur de service de nom
         boolean isSecuredMode;                                      // mode de securite
-        float taux;                                                 // TODO test parameter only, REMOVE BEFORE REMISE
+        float taux;                                                 // taux de rejet
 
 
         if (args.length < 4) {
@@ -49,7 +49,6 @@ public class Repartiteur implements IRepartiteur {
         }
 
         Repartiteur distributor = new Repartiteur(directoryHostname, username, password);
-        distributor.run();
 
         List<Map.Entry<String, Integer>> task = distributor.readTaskFile(pathToFile);
 
@@ -64,6 +63,8 @@ public class Repartiteur implements IRepartiteur {
     }
 
     public Repartiteur(String directoryHostname, String username, String password) {
+        run();
+
         this.username = username;
         this.password = password;
 
@@ -117,9 +118,7 @@ public class Repartiteur implements IRepartiteur {
         }
 
         try {
-            IRepartiteur stub = (IRepartiteur) UnicastRemoteObject
-                    .exportObject(this, port);
-
+            IRepartiteur stub = (IRepartiteur) UnicastRemoteObject.exportObject(this, port);
             Registry registry = LocateRegistry.getRegistry(RMI_REGISTER_PORT);
             registry.rebind("distributor", stub);
             System.out.println("Distributor ready.");
@@ -325,6 +324,11 @@ public class Repartiteur implements IRepartiteur {
      * @return result of the task
      */
     private int unsecuredMode(final List<Map.Entry<String, Integer>> task, float taux) {
+        if (serverStubs.size() < 2) {
+            System.out.println("There is not enough server. Must have at least 2 servers to use unsecured mode!");
+            return -1;
+        }
+
         int finalResult = 0;
         int j = 0;  // server index
         int i = 0; // task index
