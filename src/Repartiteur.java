@@ -41,7 +41,7 @@ public class Repartiteur implements IRepartiteur {
 
 
         if (args.length < 4) {
-            taux = 0.1f;
+            taux = 0.25f;
             isSecuredMode = true;
         } else {
             taux = Float.parseFloat(args[4]);
@@ -82,7 +82,11 @@ public class Repartiteur implements IRepartiteur {
 
     @Override
     public void updateServerList() throws RemoteException {
+        System.out.println("BEFORE");
+        System.out.println(serverStubs);
         getServerList(username, password);
+        System.out.println("AFTER");
+        System.out.println(serverStubs);
     }
 
     /**
@@ -219,33 +223,6 @@ public class Repartiteur implements IRepartiteur {
     }
 
     /**
-     * Return a random index identifying the server
-     * @param exception the undesired index
-     * @return index of a server
-     */
-    private int getRandomServerIndex(int exception) {
-        Random rand = new Random();
-        int newServerIndex;
-
-        do {
-            newServerIndex = rand.nextInt(serverStubs.size());
-        } while(newServerIndex == exception);
-
-        return newServerIndex;
-    }
-
-    /**
-     * Call remote server function to perform a given task
-     * @param task the given task
-     * @param serverIndex the index of the server
-     * @return the result of the task
-     * @throws RemoteException
-     */
-    private int sendOperationToServer(List<Map.Entry<String, Integer>> task, int serverIndex) throws RemoteException {
-        return sendOperationToServer(task, serverStubs.get(serverIndex).getKey());
-    }
-
-    /**
      * Call remote server function to perform a given task
      * @param task the given task
      * @param server the server to execute task
@@ -341,6 +318,12 @@ public class Repartiteur implements IRepartiteur {
         return finalResult;
     }
 
+    /**
+     * Run in unsecured mode
+     * @param task task to complete
+     * @param taux tolerated server rejection rate
+     * @return result of the task
+     */
     private int unsecuredMode(final List<Map.Entry<String, Integer>> task, float taux) {
         int finalResult = 0;
         int j = 0;  // server index

@@ -72,6 +72,7 @@ public class Directory implements IDirectory {
             // Do nothing. The server that sent the request isn't active
         }
         if (serverHostname != null) {
+            System.out.println("remove server from directory");
             servers.remove(serverHostname);
             notifyChange();
         }
@@ -95,6 +96,9 @@ public class Directory implements IDirectory {
         }
     }
 
+    /**
+     * Register the directory to JAVA RMI to enable remote call
+     */
     private void run(){
         if (System.getSecurityManager() == null) {
             System.setSecurityManager(new SecurityManager());
@@ -126,8 +130,7 @@ public class Directory implements IDirectory {
             Registry registry = LocateRegistry.getRegistry(hostname, RMI_REGISTER_PORT);
             stub = (IRepartiteur) registry.lookup("distributor");
         } catch (NotBoundException e) {
-            System.out.println("Erreur: Le nom '" + e.getMessage()
-                    + "' n'est pas défini dans le registre.");
+            System.out.println("Erreur: Le nom '" + e.getMessage() + "' n'est pas défini dans le registre.");
         } catch (AccessException e) {
             System.out.println("Erreur: " + e.getMessage());
         } catch (RemoteException e) {
@@ -137,8 +140,13 @@ public class Directory implements IDirectory {
         return stub;
     }
 
+    /**
+     * Notify its distributor that an update of the server list is needed
+     */
     private void notifyChange() {
         try {
+            System.out.println("notify change");
+            System.out.println(repartiteur);
             repartiteur.updateServerList();
         } catch (RemoteException e) {
             // ignore

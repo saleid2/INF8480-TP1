@@ -72,6 +72,11 @@ public class Serveur implements IServeur {
         this.maliciousRate = maliciousRate/100f;
     }
 
+    /**
+     * Connect to a directory server and return its stub
+     * @param hostname IP address of the directory server
+     * @return Stub object of the directory server
+     */
     private IDirectory serverDirectoryStub(String hostname) {
         IDirectory stub = null;
 
@@ -80,7 +85,6 @@ public class Serveur implements IServeur {
             stub = (IDirectory) registry.lookup("serverdirectory");
         } catch (NotBoundException e) {
             System.out.println("Erreur: Le nom '" + e.getMessage() + "' n'est pas défini dans le registre");
-
         } catch(AccessException e){
             System.out.println("Erreur: " + e.getMessage());
         } catch (RemoteException e){
@@ -90,6 +94,9 @@ public class Serveur implements IServeur {
         return stub;
     }
 
+    /**
+     * Register the server to JAVA RMI to enable remote call
+     */
     private void run() {
         if (System.getSecurityManager() == null) {
             System.setSecurityManager(new SecurityManager());
@@ -143,12 +150,14 @@ public class Serveur implements IServeur {
     @Override
     public int doTask(List<Map.Entry<String, Integer>> tasks, String username, String password) throws RemoteException {
         if (!isAuthenticated(username, password)) {
+            // distributor not yet registered to directory
             return -1;
         }
 
         isFree = false;
         if (!isTaskApproved(tasks.size())) {
             isFree = true;
+            // server cannot accept task due to resource limitation
             return -1;
         }
 
