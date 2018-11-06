@@ -72,7 +72,16 @@ public class Directory implements IDirectory {
             // Do nothing. The server that sent the request isn't active
         }
         if (serverHostname != null) {
-            servers.remove(serverHostname);
+            System.out.println(servers.size());
+
+            for (Map.Entry<String, Integer> entry : servers) {
+                if (entry.getKey().equals(serverHostname)) {
+                    servers.remove(entry);
+                    break;
+                }
+            }
+
+            System.out.println(servers.size());
             notifyChange();
         }
     }

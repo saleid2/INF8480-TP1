@@ -83,11 +83,7 @@ public class Repartiteur implements IRepartiteur {
 
     @Override
     public void updateServerList() throws RemoteException {
-        System.out.println("BEFORE");
-        System.out.println(serverStubs);
         getServerList(username, password);
-        System.out.println("AFTER");
-        System.out.println(serverStubs);
     }
 
     /**
