@@ -8,7 +8,7 @@ cat << EndOfMessage
 HELP: 
 ./serveur.sh directoryHostname maliciousRate capacity
     - directoryHostname : adresse IP du service de nom
-    - maliciousRate : taux d'introduction de donnee malicieuse (valeur entre 0 et 100)
+    - maliciousRate : taux d'introduction de donnee malicieuse entre 0 et 100
     - capacity : capacite du serveur
 
 EndOfMessage

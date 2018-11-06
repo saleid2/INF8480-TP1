@@ -11,8 +11,8 @@ HELP:
     - pass : mot de passe
     - pathToFile : chemin vers le fichier de calcul
     - directoryHostname : adresse ip du service de nom
+    - taux : taux de refus entre 0 et 1
     - isSecuredMode : mode de securite
-    - taux : taux de refus (PARAMETRE DE TEST SEULEMENT)
 
 EndOfMessage
 

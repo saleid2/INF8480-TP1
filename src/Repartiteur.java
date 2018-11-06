@@ -57,7 +57,7 @@ public class Repartiteur implements IRepartiteur {
         int finalResult = distributor.distributeTask(task, taux, isSecuredMode);
         long endTime = System.nanoTime();
 
-        long duration = (endTime - startTime) / 1000;  //divide by 1000000 to get milliseconds.
+        long duration = (endTime - startTime) / 1000000;
 
         System.out.println("Cette tache donne un resultat de " + finalResult);
         System.out.println("Le temps d'execution de cette tache est de " + duration + "ms");
